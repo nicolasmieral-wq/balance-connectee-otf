@@ -54,7 +54,7 @@ Balance ──RS-232──> SH-B30-BLE ──Bluetooth──> Chrome sur Android
 Le script doit être accessible en ligne, à une adresse en `https://`. Deux possibilités :
 
 - **Sur votre propre site** : déposez `balance-otf.js` sur votre hébergement, par exemple par FTP. C'est la méthode testée.
-- **Depuis ce dépôt, via jsDelivr** (non testée) : `https://cdn.jsdelivr.net/gh/nicolasmieral-wq/balance-connectee-otf@<version>/balance-otf.js`. Remplacez `<version>` par le numéro d'un commit précis, pour que le script ne change pas sans que vous le sachiez.
+- **Depuis ce dépôt, via jsDelivr**, sans hébergement : `https://cdn.jsdelivr.net/gh/nicolasmieral-wq/balance-connectee-otf@<version>/balance-otf.js`. Remplacez `<version>` par le numéro d'un commit précis (par exemple `c3dd12bd`), pour que le script ne change pas sans que vous le sachiez. Le fichier y est bien servi, mais cette méthode n'a pas encore été essayée dans la caisse.
 
 ### 2. Créer le favori
 
