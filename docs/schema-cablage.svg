@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760" font-family="DejaVu Sans, Arial, sans-serif">
+  <rect width="1200" height="760" fill="#ffffff"/>
+  <text x="40" y="52" font-size="30" font-weight="700" fill="#1f2a1f">Câblage balance → module Bluetooth SH-B30-BLE</text>
+  <text x="40" y="84" font-size="18" fill="#5b6558">Liaison RS-232 en envoi continu : 2 fils suffisent. Suivez les numéros de broches, pas les couleurs.</text>
+
+  <!-- Balance -->
+  <rect x="40" y="130" width="270" height="380" rx="14" fill="#f3f5ef" stroke="#3d4a3a" stroke-width="3"/>
+  <text x="175" y="170" font-size="22" font-weight="700" text-anchor="middle" fill="#1f2a1f">Balance</text>
+  <text x="175" y="196" font-size="16" text-anchor="middle" fill="#5b6558">Elicom S300FM</text>
+  <text x="175" y="232" font-size="16" text-anchor="middle" fill="#5b6558">Prise RJ (6P4C)</text>
+  <g font-size="18">
+    <rect x="90" y="260" width="170" height="52" rx="8" fill="#fff" stroke="#2e7d32" stroke-width="3"/>
+    <text x="110" y="293" font-weight="700" fill="#2e7d32">5  TXD</text>
+    <rect x="90" y="330" width="170" height="52" rx="8" fill="#fff" stroke="#9aa396" stroke-width="2" stroke-dasharray="6 5"/>
+    <text x="110" y="363" fill="#7b8577">4  RXD</text>
+    <rect x="90" y="400" width="170" height="52" rx="8" fill="#fff" stroke="#2e7d32" stroke-width="3"/>
+    <text x="110" y="433" font-weight="700" fill="#2e7d32">3  GND</text>
+  </g>
+  <text x="175" y="488" font-size="15" text-anchor="middle" fill="#7b8577">Broches 1, 2, 4, 6 : non reliées</text>
+
+  <!-- Fils -->
+  <path d="M260 286 C 380 286, 400 286, 520 286" fill="none" stroke="#2e7d32" stroke-width="6"/>
+  <path d="M260 426 C 380 426, 400 426, 520 426" fill="none" stroke="#2e7d32" stroke-width="6"/>
+  <text x="390" y="272" font-size="16" text-anchor="middle" fill="#2e7d32">signal (poids)</text>
+  <text x="390" y="412" font-size="16" text-anchor="middle" fill="#2e7d32">masse</text>
+  <text x="390" y="356" font-size="15" text-anchor="middle" fill="#7b8577">RXD : à isoler</text>
+
+  <!-- Prise DB9 femelle -->
+  <rect x="520" y="130" width="230" height="380" rx="14" fill="#f3f5ef" stroke="#3d4a3a" stroke-width="3"/>
+  <text x="635" y="170" font-size="22" font-weight="700" text-anchor="middle" fill="#1f2a1f">Prise DB9</text>
+  <text x="635" y="196" font-size="16" text-anchor="middle" fill="#5b6558">FEMELLE (à souder)</text>
+  <g font-size="18">
+    <rect x="555" y="260" width="160" height="52" rx="8" fill="#fff" stroke="#2e7d32" stroke-width="3"/>
+    <text x="575" y="293" font-weight="700" fill="#2e7d32">broche 2</text>
+    <rect x="555" y="400" width="160" height="52" rx="8" fill="#fff" stroke="#2e7d32" stroke-width="3"/>
+    <text x="575" y="433" font-weight="700" fill="#2e7d32">broche 5</text>
+  </g>
+  <text x="635" y="488" font-size="15" text-anchor="middle" fill="#7b8577">Autres broches : libres</text>
+
+  <!-- Emboitement -->
+  <path d="M760 330 L 826 330" stroke="#3d4a3a" stroke-width="4" marker-end="url(#f)"/>
+  <text x="793" y="314" font-size="14" text-anchor="middle" fill="#5b6558">s'emboîte</text>
+  <defs><marker id="f" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#3d4a3a"/></marker></defs>
+
+  <!-- Module -->
+  <rect x="840" y="130" width="320" height="380" rx="14" fill="#eaf1fb" stroke="#2b5797" stroke-width="3"/>
+  <text x="1000" y="170" font-size="22" font-weight="700" text-anchor="middle" fill="#1b3a66">Module SH-B30-BLE</text>
+  <text x="1000" y="196" font-size="16" text-anchor="middle" fill="#3b5680">DB9 MÂLE</text>
+  <g font-size="17" fill="#1b3a66">
+    <text x="870" y="246">2 = RXD (reçoit le poids)</text>
+    <text x="870" y="276">3 = TXD (sortie du module)</text>
+    <text x="870" y="306">5 = GND</text>
+  </g>
+  <rect x="860" y="332" width="280" height="58" rx="8" fill="#fff" stroke="#2b5797" stroke-width="2"/>
+  <text x="1000" y="357" font-size="16" font-weight="700" text-anchor="middle" fill="#1b3a66">Cavaliers : les 2 sur DEVICE</text>
+  <text x="1000" y="380" font-size="14" text-anchor="middle" fill="#3b5680">(PC COM inverse 2 et 3)</text>
+  <text x="870" y="428" font-size="17" fill="#1b3a66">Alimentation 5 V séparée</text>
+  <text x="870" y="458" font-size="17" fill="#1b3a66">Bluetooth : service FFE0</text>
+  <text x="870" y="486" font-size="17" fill="#1b3a66">9600 bauds, 8N1</text>
+
+  <!-- Vue de face DB9 femelle -->
+  <text x="40" y="572" font-size="20" font-weight="700" fill="#1f2a1f">Prise DB9 femelle vue côté trous (la face qui s'emboîte)</text>
+  <path d="M110 600 L 470 600 L 440 700 L 140 700 Z" fill="#2b2f2a" stroke="#3d4a3a" stroke-width="3" stroke-linejoin="round"/>
+  <g font-size="16" font-weight="700" text-anchor="middle">
+    <circle cx="155" cy="635" r="13" fill="#39ff5a"/><text x="155" y="641" fill="#000">5</text>
+    <circle cx="222" cy="635" r="11" fill="#d8dbd4"/><text x="222" y="641" fill="#000">4</text>
+    <circle cx="289" cy="635" r="11" fill="#d8dbd4"/><text x="289" y="641" fill="#000">3</text>
+    <circle cx="356" cy="635" r="13" fill="#39ff5a"/><text x="356" y="641" fill="#000">2</text>
+    <circle cx="423" cy="635" r="11" fill="#d8dbd4"/><text x="423" y="641" fill="#000">1</text>
+    <circle cx="188" cy="675" r="11" fill="#d8dbd4"/><text x="188" y="681" fill="#000">9</text>
+    <circle cx="255" cy="675" r="11" fill="#d8dbd4"/><text x="255" y="681" fill="#000">8</text>
+    <circle cx="322" cy="675" r="11" fill="#d8dbd4"/><text x="322" y="681" fill="#000">7</text>
+    <circle cx="389" cy="675" r="11" fill="#d8dbd4"/><text x="389" y="681" fill="#000">6</text>
+  </g>
+  <g font-size="17" fill="#1f2a1f">
+    <text x="520" y="625">Broche <tspan font-weight="700" fill="#2e7d32">2</tspan> : 2e trou depuis la droite → TXD balance</text>
+    <text x="520" y="655">Broche <tspan font-weight="700" fill="#2e7d32">5</tspan> : 1er trou à gauche → GND</text>
+    <text x="520" y="685" fill="#5b6558">Côté soudures, l'ordre est inversé : suivez les numéros gravés.</text>
+  </g>
+  <text x="40" y="740" font-size="15" fill="#7b8577">Vérification : balance allumée, environ -7,5 V entre les broches 2 et 5 de la prise, avant de la brancher.</text>
+</svg>
