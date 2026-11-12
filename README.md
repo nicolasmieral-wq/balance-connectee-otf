@@ -4,6 +4,11 @@ Ce petit script relie une balance de marché à la **caisse enregistreuse d'[Ouv
 
 Il ne modifie pas le site Ouvretaferme, n'utilise pas son API et ne demande aucune clé. Il s'ajoute simplement à la page de la caisse, ouverte dans le navigateur, à l'aide d'un favori.
 
+> [!WARNING]
+> **Projet expérimental, à usage de test uniquement.**
+> Il ne doit pas être utilisé pour la vente directe ni pour aucune vente au poids. Le poids transmis à la caisse ne remplace pas une pesée faite et affichée par un instrument de pesage homologué, et la réglementation de la métrologie légale encadre ce type de transmission.
+> Ce logiciel est fourni « tel quel », sans aucune garantie. **L'auteur n'est pas responsable** de son utilisation, en particulier pour de la vente directe, ni des erreurs de poids, de prix ou d'encaissement qui pourraient en résulter. Toute personne qui l'utilise pour vendre le fait sous sa seule responsabilité.
+
 > Projet indépendant, créé par un maraîcher, sans lien officiel avec Ouvretaferme. Une mise à jour de la caisse peut l'empêcher de fonctionner : vérifiez toujours le montant avant d'encaisser.
 
 ## Ce qui a été testé
@@ -83,7 +88,7 @@ Il faut relancer le favori à chaque rechargement de la page.
 - **Auto (vert) :** posez le produit, touchez l'article, c'est enregistré.
 - **Auto (gris) :** mode manuel. Ouvrez l'article et touchez **Poids**, sous « Vendu », puis **Enregistrer**.
 
-Faites vos premiers essais sur une ferme ou une vente de test.
+Utilisez-le uniquement sur une ferme ou une vente de test, jamais pour une vraie vente.
 
 ## Documentation
 
@@ -107,6 +112,6 @@ Points d'appui dans la page de la caisse, à revoir si Ouvretaferme change son i
 - montant : `input[name="price[ID]"]` ;
 - passage en saisie clavier : `.merchant-switch-keyboard-link`. Le pavé tactile limite à 2 décimales et ne recalcule pas le montant.
 
-## Licence
+## Licence et responsabilité
 
-[MIT](LICENSE).
+[MIT](LICENSE). Projet expérimental, sans garantie : l'auteur décline toute responsabilité en cas d'utilisation pour la vente, directe ou non.
