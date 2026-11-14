@@ -3,7 +3,7 @@
 > **Concept non construit, non imprimé, non testé.** Cotes indicatives, à ajuster avec les vrais composants.
 > La saisie manuelle au pavé correspond à la pratique habituelle. La lecture de la balance par la prise RJ12 relie la balance à la caisse : réservée aux essais, jamais à la vente (voir l'avertissement du [README principal](../README.md)).
 
-Un pavé numérique 16 touches qui se branche en USB-C sur un iPad ou un téléphone, comme un clavier. En essai, la touche « Peser » tape le poids stable lu sur la balance par une prise RJ12.
+Un pavé numérique 16 touches qui se branche en USB-C sur un iPad ou un téléphone, comme un clavier. En essai, la touche « Peser » tape le poids stable lu sur la balance par une prise RJ12, placée sur le bord avant.
 
 ![Vue éclatée](vue-isometrique.png)
 
@@ -11,7 +11,7 @@ Un pavé numérique 16 touches qui se branche en USB-C sur un iPad ou un télép
 
 | Fichier | Contenu |
 |---|---|
-| `boitier-base.stl` | Base : parois et fond de 2 mm, ouverture USB-C et encoche RJ12 |
+| `boitier-base.stl` | Base : parois et fond de 2 mm, ouverture USB-C à l'arrière, encoche RJ12 au milieu du bord avant |
 | `boitier-dessus.stl` | Couvercle : 16 trous de 12,4 mm (pas de 15 mm), trou de LED, lèvre emboîtée (jeu 0,2 mm) |
 | `generateur-boitier.html` | Générateur en ligne : place la fiche USB-C sur le côté, à la hauteur de la tablette, et télécharge les STL |
 | `generer_boitier.py` | Génère les deux STL. Toutes les cotes sont en tête du fichier |

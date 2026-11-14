@@ -126,7 +126,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
       </div>
     </div>
   </div>
-  <p class="note">Boîtier 70 × 92 × 28 mm, pavé 4 × 4 touches de 12 mm, prise RJ12 à l'arrière. Projet libre, à usage d'essai : <a href="https://github.com/nicolasmieral-wq/balance-connectee-otf/tree/main/boitier">github.com/nicolasmieral-wq/balance-connectee-otf</a></p>
+  <p class="note">Boîtier 70 × 92 × 28 mm, pavé 4 × 4 touches de 12 mm, prise RJ12 sur le bord avant. Projet libre, à usage d'essai : <a href="https://github.com/nicolasmieral-wq/balance-connectee-otf/tree/main/boitier">github.com/nicolasmieral-wq/balance-connectee-otf</a></p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -143,7 +143,7 @@ MODELES.forEach(function(m,i){var o=document.createElement('option');o.value=i;o
 sel.onchange=function(){var m=MODELES[sel.value];if(m[1]){$('epaisseur').value=m[1];}else{$('epaisseur').focus();}maj();};
 
 /* ---------- Géométrie : cellules alignées, coupées par les chanfreins ---------- */
-var W=70,L=92,H=28,COUPE=18,LEVRE_EP=1.2,LEVRE_H=3,PAS=15,TROU=12.4,GY0=8,LED=[58,74,3.2],RJ=[44,58,3,COUPE],USB_AR=[12,22,6,11];
+var W=70,L=92,H=28,COUPE=18,LEVRE_EP=1.2,LEVRE_H=3,PAS=15,TROU=12.4,GY0=8,LED=[58,74,3.2],RJ=[28,42,3,COUPE],USB_AR=[12,22,6,11];
 function dans(v,a,b){return v>a&&v<b}
 function rd(v,n){var k=Math.pow(10,n);return String(Math.round(v*k)/k+0)}
 function cross(a,b){return[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]}
@@ -186,11 +186,12 @@ function construire(p){
     if(cote!=='arriere'&&dans(x,mur[0],mur[1])&&dans(y,usbY[0],usbY[1])&&dans(z,usbZ[0],usbZ[1]))return false;
     if(poche&&dans(x,px[0],px[1])&&dans(y,yc-11,yc+11)&&z>Math.max(fondLocal,0.6))return false;
     if(dans(x,P,W-P)&&dans(y,P,L-P)&&z>F)return false;
-    if(y>L-P){if(cote==='arriere'&&dans(x,USB_AR[0],USB_AR[1])&&dans(z,USB_AR[2],USB_AR[3]))return false;if(dans(x,RJ[0],RJ[1])&&dans(z,RJ[2],RJ[3]))return false}
+    if(y<P&&dans(x,RJ[0],RJ[1])&&dans(z,RJ[2],RJ[3]))return false;
+    if(y>L-P&&cote==='arriere'&&dans(x,USB_AR[0],USB_AR[1])&&dans(z,USB_AR[2],USB_AR[3]))return false;
     return true}
   var j=P+p.jeu,e=j+LEVRE_EP;
   function dessus(x,y,z){
-    if(dans(z,COUPE-LEVRE_H,COUPE)){if(y>L-e&&dans(x,RJ[0]-1,RJ[1]+1))return false;if(cote!=='arriere'&&dans(y,usbY[0]-1,usbY[1]+1)&&(cote==='gauche'?x<e:x>W-e))return false;return dans(x,j,W-j)&&dans(y,j,L-j)&&!(dans(x,e,W-e)&&dans(y,e,L-e))}
+    if(dans(z,COUPE-LEVRE_H,COUPE)){if(y<e&&dans(x,RJ[0]-1,RJ[1]+1))return false;if(cote!=='arriere'&&dans(y,usbY[0]-1,usbY[1]+1)&&(cote==='gauche'?x<e:x>W-e))return false;return dans(x,j,W-j)&&dans(y,j,L-j)&&!(dans(x,e,W-e)&&dans(y,e,L-e))}
     if(!(x>0&&x<W&&y>0&&y<L&&z>COUPE&&z<H))return false;
     if(z<H-P)return!(dans(x,P,W-P)&&dans(y,P,L-P));
     return!trous().some(function(t){return dans(x,t[0],t[1])&&dans(y,t[2],t[3])})}

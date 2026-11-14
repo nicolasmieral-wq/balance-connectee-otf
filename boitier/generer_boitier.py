@@ -1,7 +1,7 @@
 """Génère le boîtier imprimé en 3D du pavé balance (concept, non testé).
 
 Deux pièces, en millimètres, arêtes extérieures chanfreinées :
-  boitier-base.stl  : fond avec les ouvertures USB-C et RJ12
+  boitier-base.stl  : fond avec l'ouverture USB-C (arrière) et l'encoche RJ12 (avant)
   boitier-dessus.stl : couvercle percé pour 16 touches, avec une lèvre qui s'emboîte
 
 Le solide est découpé en cellules alignées sur les axes, coupées par les plans
@@ -26,7 +26,7 @@ GRILLE_Y0 = 8.0
 LED = (58.0, 74.0, 3.2)                     # x, y, côté du trou carré
 
 USB = (12.0, 22.0, 6.0, 11.0)               # x0, x1, z0, z1 dans la paroi arrière
-RJ12 = (44.0, 58.0, 3.0, COUPE)             # encoche ouverte vers le haut
+RJ12 = (28.0, 42.0, 3.0, COUPE)             # encoche du bord avant, ouverte vers le haut
 
 
 def dans(v, a, b):
@@ -38,11 +38,10 @@ def plein_base(x, y, z):
         return False
     if dans(x, PAROI, LARGEUR - PAROI) and dans(y, PAROI, LONGUEUR - PAROI) and z > FOND:
         return False                                          # cavité
-    if y > LONGUEUR - PAROI:
-        if dans(x, USB[0], USB[1]) and dans(z, USB[2], USB[3]):
-            return False
-        if dans(x, RJ12[0], RJ12[1]) and dans(z, RJ12[2], RJ12[3]):
-            return False
+    if y < PAROI and dans(x, RJ12[0], RJ12[1]) and dans(z, RJ12[2], RJ12[3]):
+        return False
+    if y > LONGUEUR - PAROI and dans(x, USB[0], USB[1]) and dans(z, USB[2], USB[3]):
+        return False
     return True
 
 
@@ -52,7 +51,7 @@ def plein_dessus(x, y, z):
         dans_levre = dans(x, j, LARGEUR - j) and dans(y, j, LONGUEUR - j)
         creux = dans(x, j + LEVRE_EPAISSEUR, LARGEUR - j - LEVRE_EPAISSEUR) and \
             dans(y, j + LEVRE_EPAISSEUR, LONGUEUR - j - LEVRE_EPAISSEUR)
-        if y > LONGUEUR - j - LEVRE_EPAISSEUR and dans(x, RJ12[0] - 1, RJ12[1] + 1):
+        if y < j + LEVRE_EPAISSEUR and dans(x, RJ12[0] - 1, RJ12[1] + 1):
             return False                                      # dégagement au-dessus du RJ12
         return dans_levre and not creux
     if not (0 < x < LARGEUR and 0 < y < LONGUEUR and COUPE < z < HAUTEUR):

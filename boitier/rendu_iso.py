@@ -58,7 +58,7 @@ def scene(eclate):
     objets.append((boite(27, 70, 2.5, 13, 16, 1.6), (150, 40, 50)))
     objets.append((boite(30, 74, 4.1, 7, 6, 1.8), (30, 30, 30)))
     # Prise RJ12
-    objets.append((boite(44.5, 74, 2.5, 13.5, 18, 13), (205, 205, 200)))
+    objets.append((boite(28.25, 0.5, 2.5, 13.5, 18, 13), (205, 205, 200)))
     # PCF8574 (lecture du pavé)
     return objets
 
@@ -151,8 +151,6 @@ if __name__ == '__main__':
     et = [('Couvercle imprimé (dessus)', (70, 20, 24 + h), 'g'),
           ('Pavé 16 touches + PCF8574', (66, 30, pz), 'g'),
           ('Base imprimée', (70, 30, 9), 'g'),
-          ('XIAO ESP32-S3', (12, 78, 3.7), 'd'),
           ('MAX3232', (34, 82, 4.1), 'd'),
-          ('Sortie USB-C', (17, 92, 8.5), 'd'),
-          ('Prise RJ12', (51, 92, 12), 'd')]
-    rendre(scene(h), ICI / 'vue-isometrique.png', etiquettes=et)
+          ('Prise RJ12 (avant)', (35, 0, 12), 'g')]
+    rendre(scene(h), ICI / 'vue-isometrique.png', etiquettes=et, camera=(1.0, -1.25, 1.05))
