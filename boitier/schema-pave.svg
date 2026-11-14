@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 760" width="1240" height="760" font-family="DejaVu Sans, Arial, sans-serif">
+  <rect width="1240" height="760" fill="#ffffff"/>
+  <text x="40" y="50" font-size="28" font-weight="700" fill="#17201A">Câblage du pavé balance (prototype, écoute seule)</text>
+  <text x="40" y="80" font-size="17" fill="#5B665D">Liaisons à 3,3 V. L'émetteur RS-232 n'est pas câblé : le boîtier n'envoie jamais de tension vers la balance.</text>
+
+  <!-- XIAO -->
+  <rect x="470" y="120" width="300" height="420" rx="14" fill="#E8EEF8" stroke="#24468C" stroke-width="3"/>
+  <text x="620" y="158" font-size="22" font-weight="700" text-anchor="middle" fill="#1B3466">XIAO ESP32-S3</text>
+  <g font-size="17" fill="#1B3466" font-family="DejaVu Sans Mono, monospace">
+    <text x="490" y="210">3V3</text>
+    <text x="490" y="250">GND</text>
+    <text x="490" y="330">D7</text>
+    <text x="490" y="370">D8</text>
+    <text x="750" y="210" text-anchor="end">D4 SDA</text>
+    <text x="750" y="250" text-anchor="end">D5 SCL</text>
+    <text x="750" y="420" text-anchor="end">D9</text>
+  </g>
+  <rect x="560" y="500" width="120" height="40" rx="8" fill="#9AA0A8"/>
+  <text x="620" y="526" font-size="16" font-weight="700" text-anchor="middle" fill="#17201A">USB-C</text>
+  <path d="M620 540 V 620" stroke="#17201A" stroke-width="4"/>
+  <rect x="520" y="620" width="200" height="56" rx="10" fill="#17201A"/>
+  <text x="620" y="655" font-size="18" font-weight="700" text-anchor="middle" fill="#ffffff">iPad ou Android</text>
+  <text x="740" y="590" font-size="15" fill="#5B665D">clavier USB + alimentation</text>
+
+  <!-- MAX3232 -->
+  <rect x="160" y="170" width="220" height="260" rx="14" fill="#F7E9EA" stroke="#962832" stroke-width="3"/>
+  <text x="175" y="206" font-size="21" font-weight="700" fill="#6E1D25">MAX3232</text>
+  <g font-size="16" fill="#6E1D25" font-family="DejaVu Sans Mono, monospace">
+    <text x="365" y="216" text-anchor="end">VCC</text>
+    <text x="365" y="256" text-anchor="end">GND</text>
+    <text x="365" y="336" text-anchor="end">R1OUT</text>
+    <text x="365" y="376" text-anchor="end">R2OUT</text>
+    <text x="175" y="336">R1IN</text>
+    <text x="175" y="376">R2IN</text>
+    <text x="175" y="416" fill="#9C6A6F">T1OUT : libre</text>
+  </g>
+  <path d="M380 210 H 470" stroke="#C0392B" stroke-width="4"/>
+  <path d="M380 250 H 470" stroke="#17201A" stroke-width="4"/>
+  <path d="M380 330 H 470" stroke="#E07B00" stroke-width="4"/>
+  <path d="M380 370 H 470" stroke="#2E7D32" stroke-width="4"/>
+
+  <!-- RJ12 -->
+  <rect x="30" y="250" width="100" height="190" rx="12" fill="#EFF1EC" stroke="#3D4A3A" stroke-width="3"/>
+  <text x="80" y="282" font-size="18" font-weight="700" text-anchor="middle" fill="#17201A">RJ12</text>
+  <g font-size="16" fill="#17201A" font-family="DejaVu Sans Mono, monospace">
+    <text x="115" y="336" text-anchor="end">5</text>
+    <text x="115" y="376" text-anchor="end">4</text>
+    <text x="115" y="426" text-anchor="end">3</text>
+  </g>
+  <path d="M130 330 H 175" stroke="#E07B00" stroke-width="4"/>
+  <path d="M130 370 H 175" stroke="#2E7D32" stroke-width="4"/>
+  <path d="M130 420 H 145 V 470 H 440 V 250" fill="none" stroke="#17201A" stroke-width="4"/>
+  <text x="80" y="470" font-size="14" text-anchor="middle" fill="#5B665D">vers la balance</text>
+  <text x="290" y="494" font-size="15" text-anchor="middle" fill="#17201A">masse commune (RJ 3 = GND Elicom)</text>
+
+  <!-- PCF8574 + pavé -->
+  <rect x="860" y="170" width="200" height="140" rx="14" fill="#E3EFE8" stroke="#1E6B4A" stroke-width="3"/>
+  <text x="960" y="206" font-size="20" font-weight="700" text-anchor="middle" fill="#134832">PCF8574</text>
+  <g font-size="16" fill="#134832" font-family="DejaVu Sans Mono, monospace">
+    <text x="875" y="246">SDA</text>
+    <text x="875" y="286">SCL</text>
+    <text x="1045" y="246" text-anchor="end">P0-P3</text>
+    <text x="1045" y="286" text-anchor="end">P4-P7</text>
+  </g>
+  <path d="M770 210 H 815 V 240 H 860" fill="none" stroke="#1F6FB2" stroke-width="4"/>
+  <path d="M770 250 H 800 V 280 H 860" fill="none" stroke="#7B4FA3" stroke-width="4"/>
+  <text x="960" y="370" font-size="14" text-anchor="middle" fill="#5B665D">3V3 et GND, comme le MAX3232</text>
+  <rect x="1090" y="160" width="130" height="160" rx="10" fill="#2B3A30"/>
+  <g fill="#C9D1C6">
+    <rect x="1102" y="172" width="22" height="22" rx="3"/><rect x="1132" y="172" width="22" height="22" rx="3"/><rect x="1162" y="172" width="22" height="22" rx="3"/><rect x="1192" y="172" width="22" height="22" rx="3"/>
+    <rect x="1102" y="202" width="22" height="22" rx="3"/><rect x="1132" y="202" width="22" height="22" rx="3"/><rect x="1162" y="202" width="22" height="22" rx="3"/><rect x="1192" y="202" width="22" height="22" rx="3"/>
+    <rect x="1102" y="232" width="22" height="22" rx="3"/><rect x="1132" y="232" width="22" height="22" rx="3"/><rect x="1162" y="232" width="22" height="22" rx="3"/><rect x="1192" y="232" width="22" height="22" rx="3"/>
+    <rect x="1102" y="262" width="22" height="22" rx="3"/><rect x="1132" y="262" width="22" height="22" rx="3"/><rect x="1162" y="262" width="22" height="22" rx="3"/><rect x="1192" y="262" width="22" height="22" rx="3"/>
+  </g>
+  <text x="1155" y="306" font-size="13" text-anchor="middle" fill="#C9D1C6">pavé 4 × 4</text>
+  <path d="M1060 240 H 1090" stroke="#1E6B4A" stroke-width="4"/>
+  <path d="M1060 280 H 1090" stroke="#1E6B4A" stroke-width="4"/>
+  <text x="1155" y="345" font-size="14" text-anchor="middle" fill="#5B665D">4 lignes + 4 colonnes</text>
+
+  <!-- LED -->
+  <path d="M770 415 H 880" stroke="#B8860B" stroke-width="4"/>
+  <rect x="880" y="401" width="70" height="28" rx="4" fill="#ffffff" stroke="#17201A" stroke-width="2"/>
+  <text x="915" y="421" font-size="14" text-anchor="middle" fill="#17201A">330 Ω</text>
+  <path d="M950 415 H 985" stroke="#B8860B" stroke-width="4"/>
+  <circle cx="1000" cy="415" r="14" fill="#F2A33A" stroke="#17201A" stroke-width="2"/>
+  <text x="1025" y="421" font-size="15" fill="#17201A">LED → GND</text>
+
+  <text x="40" y="720" font-size="15" fill="#5B665D">R1 et R2 écoutent les broches 5 et 4 : le programme garde celle qui transporte des trames, ce qui corrige un TX/RX inversé.</text>
+  <text x="40" y="744" font-size="15" fill="#5B665D">Câble balance : RJ12 droit (broche 1 sur 1). Un câble téléphonique croisé déplacerait la masse. Brochage à confirmer pour chaque balance.</text>
+</svg>
