@@ -1,7 +1,7 @@
 """Génère le boîtier imprimé en 3D du pavé balance (concept, non testé).
 
 Deux pièces, en millimètres, arêtes extérieures chanfreinées :
-  boitier-base.stl  : fond avec l'ouverture USB-C (arrière) et l'encoche RJ12 (avant)
+  boitier-base.stl  : fond, ouverture USB-C (côté gauche), encoche RJ12 (avant), 4 plots pour le circuit
   boitier-dessus.stl : couvercle percé pour 16 touches, avec une lèvre qui s'emboîte
 
 Le solide est découpé en cellules alignées sur les axes, coupées par les plans
@@ -22,11 +22,13 @@ COUPE = 18.0                  # hauteur du joint entre base et couvercle
 LEVRE_EPAISSEUR, LEVRE_JEU, LEVRE_HAUTEUR = 1.2, 0.2, 3.0
 
 PAS_TOUCHE, TROU_TOUCHE = 15.0, 12.4       # 4 x 4 touches à capuchon carré de 12 mm
-GRILLE_Y0 = 8.0
-LED = (58.0, 74.0, 3.2)                     # x, y, côté du trou carré
+GRILLE_Y0 = 18.5                            # laisse la place à la prise RJ12 sous le circuit
+LED = (57.5, 82.0, 3.2)                     # x, y, côté du trou carré
 
-USB = (12.0, 22.0, 6.0, 11.0)               # x0, x1, z0, z1 dans la paroi arrière
+USB = (49.6, 59.6, 2.0, 8.5)                # y0, y1, z0, z1 dans la paroi gauche (XIAO du circuit pave-balance)
 RJ12 = (28.0, 42.0, 3.0, COUPE)             # encoche du bord avant, ouverte vers le haut
+PLOTS = ((6.7, 6.7), (63.3, 6.7), (6.7, 85.3), (63.3, 85.3))   # sous les trous M2,5 du circuit
+PLOT_COTE, PLOT_TROU, PLOT_HAUT = 5.0, 2.2, 17.0               # le circuit repose à z = 17
 
 
 def dans(v, a, b):
@@ -36,11 +38,16 @@ def dans(v, a, b):
 def plein_base(x, y, z):
     if not (0 < x < LARGEUR and 0 < y < LONGUEUR and 0 < z < COUPE):
         return False
+    for cx, cy in PLOTS:
+        if dans(x, cx - PLOT_COTE / 2, cx + PLOT_COTE / 2) and dans(y, cy - PLOT_COTE / 2, cy + PLOT_COTE / 2) \
+                and z < PLOT_HAUT:
+            return not (dans(x, cx - PLOT_TROU / 2, cx + PLOT_TROU / 2) and
+                        dans(y, cy - PLOT_TROU / 2, cy + PLOT_TROU / 2) and z > FOND)
     if dans(x, PAROI, LARGEUR - PAROI) and dans(y, PAROI, LONGUEUR - PAROI) and z > FOND:
         return False                                          # cavité
     if y < PAROI and dans(x, RJ12[0], RJ12[1]) and dans(z, RJ12[2], RJ12[3]):
         return False
-    if y > LONGUEUR - PAROI and dans(x, USB[0], USB[1]) and dans(z, USB[2], USB[3]):
+    if x < PAROI and dans(y, USB[0], USB[1]) and dans(z, USB[2], USB[3]):
         return False
     return True
 
@@ -179,9 +186,12 @@ def ecrire_stl(chemin, triangles, nom):
 
 
 def base():
-    xs = [0, PAROI, LARGEUR - PAROI, LARGEUR, *USB[:2], *RJ12[:2], CHANFREIN, LARGEUR - CHANFREIN]
-    ys = [0, PAROI, LONGUEUR - PAROI, LONGUEUR, CHANFREIN, LONGUEUR - CHANFREIN]
-    zs = [0, FOND, COUPE, *USB[2:], RJ12[2], CHANFREIN]
+    xs = [0, PAROI, LARGEUR - PAROI, LARGEUR, *RJ12[:2], CHANFREIN, LARGEUR - CHANFREIN]
+    ys = [0, PAROI, LONGUEUR - PAROI, LONGUEUR, *USB[:2], CHANFREIN, LONGUEUR - CHANFREIN]
+    zs = [0, FOND, COUPE, *USB[2:], RJ12[2], CHANFREIN, PLOT_HAUT]
+    for cx, cy in PLOTS:
+        xs += [cx - PLOT_COTE / 2, cx + PLOT_COTE / 2, cx - PLOT_TROU / 2, cx + PLOT_TROU / 2]
+        ys += [cy - PLOT_COTE / 2, cy + PLOT_COTE / 2, cy - PLOT_TROU / 2, cy + PLOT_TROU / 2]
     return mailler(plein_base, xs, ys, zs, plans_chanfrein(bas=True, haut=False))
 
 

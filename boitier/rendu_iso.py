@@ -41,25 +41,23 @@ def scene(eclate):
     objets.append((base, (214, 219, 208)))
     h = eclate
     objets.append((decaler(dessus, h), (234, 237, 230)))
-    # Pavé : circuit et 16 capuchons, sous le couvercle
-    pcb_z = 18.0 + h * 0.42
-    objets.append((boite(4, 5, pcb_z, 62, 62, 1.6), (46, 125, 78)))
-    objets.append((boite(46, 20, pcb_z - 1.6, 16, 12, 1.6), (40, 90, 160)))
+    # Circuit pave-balance (KiCad) posé sur les plots à z = 17, éclaté avec ses composants
+    dz = h * 0.42
+    pcb_z = 17.0 + dz
+    objets.append((boite(3.7, 3.7, pcb_z, 62.6, 84.6, 1.6), (46, 125, 78)))
     x_dep = g.LARGEUR / 2 - (3 * g.PAS_TOUCHE + g.TROU_TOUCHE) / 2
     for i in range(4):
         for k in range(4):
-            objets.append((boite(x_dep + i * g.PAS_TOUCHE + 0.4, g.GRILLE_Y0 + k * g.PAS_TOUCHE + 0.4,
-                                 pcb_z + 1.6, 11.6, 11.6, 7.0), (60, 64, 58)))
-    # XIAO ESP32-S3, prise USB-C vers l'arrière
-    objets.append((boite(6.5, 69, 2.5, 17.8, 21, 1.2), (36, 70, 140)))
-    objets.append((boite(9, 70, 3.7, 12.5, 12, 2.5), (180, 184, 190)))
-    objets.append((boite(13, 86, 5.8, 8.6, 6.5, 3.2), (150, 154, 160)))
-    # Module MAX3232
-    objets.append((boite(27, 70, 2.5, 13, 16, 1.6), (150, 40, 50)))
-    objets.append((boite(30, 74, 4.1, 7, 6, 1.8), (30, 30, 30)))
-    # Prise RJ12
-    objets.append((boite(28.25, 0.5, 2.5, 13.5, 18, 13), (205, 205, 200)))
-    # PCF8574 (lecture du pavé)
+            x0, y0 = x_dep + i * g.PAS_TOUCHE + 0.2, g.GRILLE_Y0 + k * g.PAS_TOUCHE + 0.2
+            objets.append((boite(x0, y0, pcb_z + 1.6, 12, 12, 3.6), (40, 40, 40)))
+            objets.append((boite(x0 + 0.4, y0 + 0.4, pcb_z + 5.2, 11.2, 11.2, 5.0), (60, 64, 58)))
+    objets.append((boite(25.7, 79.3, pcb_z + 1.6, 20.3, 6.4, 4.0), (30, 30, 30)))      # MAX3232
+    objets.append((boite(56.2, 80.4, pcb_z + 1.6, 3.0, 3.0, 4.5), (230, 120, 40)))    # LED
+    objets.append((boite(3.3, 45.7, 2.2 + dz * 0.5, 21, 17.8, 1.2), (36, 70, 140)))   # XIAO suspendu
+    objets.append((boite(2.0, 50.9, 3.4 + dz * 0.5, 7.5, 9.0, 3.2), (180, 184, 190))) # USB-C
+    for yy in (46.4, 61.6):
+        objets.append((boite(5.0, yy, 3.4 + dz * 0.5, 17.8, 2.5, pcb_z - 3.4 - dz * 0.5), (25, 25, 25)))
+    objets.append((boite(28.4, 1.5, pcb_z - 13.0, 13.2, 18.0, 13.0), (205, 205, 200)))  # RJ12 dessous
     return objets
 
 
@@ -146,11 +144,13 @@ def rendre(objets, chemin, largeur=1900, hauteur=1250, etiquettes=(), camera=(0.
 
 
 if __name__ == '__main__':
-    h = 48
+    h = 80
     pz = 18 + h * 0.42
-    et = [('Couvercle imprimé (dessus)', (70, 20, 24 + h), 'g'),
-          ('Pavé 16 touches + PCF8574', (66, 30, pz), 'g'),
-          ('Base imprimée', (70, 30, 9), 'g'),
-          ('MAX3232', (34, 82, 4.1), 'd'),
-          ('Prise RJ12 (avant)', (35, 0, 12), 'g')]
+    pz = 17 + h * 0.42
+    et = [('Couvercle imprimé', (70, 20, 24 + h), 'g'),
+          ('Circuit pave-balance', (66, 40, pz), 'g'),
+          ('Base + 4 plots', (70, 30, 9), 'g'),
+          ('MAX3232', (36, 82, pz + 5.6), 'd'),
+          ('XIAO (USB à gauche)', (3, 54, 8), 'd'),
+          ('Prise RJ12 (avant)', (35, 2, pz - 7), 'd')]
     rendre(scene(h), ICI / 'vue-isometrique.png', etiquettes=et, camera=(1.0, -1.25, 1.05))

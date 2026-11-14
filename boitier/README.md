@@ -11,7 +11,7 @@ Un pavé numérique 16 touches qui se branche en USB-C sur un iPad ou un télép
 
 | Fichier | Contenu |
 |---|---|
-| `boitier-base.stl` | Base : parois et fond de 2 mm, ouverture USB-C à l'arrière, encoche RJ12 au milieu du bord avant |
+| `boitier-base.stl` | Base : parois et fond de 2 mm, ouverture USB-C sur le côté gauche, encoche RJ12 au milieu du bord avant, 4 plots qui portent le circuit |
 | `boitier-dessus.stl` | Couvercle : 16 trous de 12,4 mm (pas de 15 mm), trou de LED, lèvre emboîtée (jeu 0,2 mm) |
 | `generateur-boitier.html` | Générateur en ligne : place la fiche USB-C sur le côté, à la hauteur de la tablette, et télécharge les STL |
 | `generer_boitier.py` | Génère les deux STL. Toutes les cotes sont en tête du fichier |
@@ -26,18 +26,14 @@ Pour modifier une cote : changer la valeur dans `generer_boitier.py`, puis `pyth
 
 PETG ou PLA, couches de 0,2 mm, sans supports. Base à plat, couvercle retourné (dessus contre le plateau).
 
-## Composants
+## Circuit imprimé
 
-XIAO ESP32-S3, module MAX3232 3,3 V, module PCF8574, 16 boutons 12 × 12 mm et capuchons carrés, plaque à pastilles 62 × 62 mm, prise RJ12 pour circuit imprimé, LED 3 mm et résistance 330 Ω, câble RJ12 droit, câble USB-C vers USB-C.
+Le boîtier est dessiné pour le circuit du dossier [`circuit/`](../circuit/README.md) : grille des touches à 18,5 mm du bord avant (place pour la prise RJ12 sous le circuit), circuit posé à 17 mm de hauteur sur 4 plots (vis M2,5 autotaraudeuses dans des trous de 2,2 mm), XIAO suspendu sous le circuit avec sa prise USB-C sur le côté gauche, centrée à 54,6 mm de l'avant.
 
-## Câblage
+Le schéma de câblage ci-dessous correspond à l'ancienne version sur plaque à pastilles (avec PCF8574). Le circuit imprimé n'utilise plus le PCF8574.
 
 ![Schéma](schema-pave.png)
 
-- RJ12 broche 5 → MAX3232 R1IN, broche 4 → R2IN, broche 3 → masse (Elicom S300FM). Le programme écoute les deux récepteurs : un TX/RX inversé fonctionne.
-- MAX3232 R1OUT → D7, R2OUT → D8. Émetteur non câblé : rien n'est envoyé à la balance.
-- PCF8574 SDA → D4, SCL → D5, P0-P3 lignes et P4-P7 colonnes du pavé.
-- LED sur D9 avec 330 Ω.
 - Câble balance droit (broche 1 sur 1) : un câble téléphonique croisé déplacerait la masse.
 
 Le programme du XIAO n'est pas encore écrit.

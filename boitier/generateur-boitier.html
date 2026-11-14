@@ -87,7 +87,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
           </div>
         </fieldset>
         <div class="row">
-          <label for="posY">Position le long du côté (mm)<input id="posY" type="number" step="1" min="14" max="78" value="70"><small>Depuis l'avant du pavé</small></label>
+          <label for="posY">Position le long du côté (mm)<input id="posY" type="number" step="0.1" min="14" max="78" value="54.6"><small>Depuis l'avant du pavé. 54,6 mm avec le circuit pave-balance</small></label>
           <label for="ajust">Ajustement de hauteur (mm)<input id="ajust" type="number" step="0.1" min="-3" max="3" value="0"><small>Après l'impression d'essai</small></label>
         </div>
       </div>
@@ -143,7 +143,7 @@ MODELES.forEach(function(m,i){var o=document.createElement('option');o.value=i;o
 sel.onchange=function(){var m=MODELES[sel.value];if(m[1]){$('epaisseur').value=m[1];}else{$('epaisseur').focus();}maj();};
 
 /* ---------- Géométrie : cellules alignées, coupées par les chanfreins ---------- */
-var W=70,L=92,H=28,COUPE=18,LEVRE_EP=1.2,LEVRE_H=3,PAS=15,TROU=12.4,GY0=8,LED=[58,74,3.2],RJ=[28,42,3,COUPE],USB_AR=[12,22,6,11];
+var W=70,L=92,H=28,COUPE=18,LEVRE_EP=1.2,LEVRE_H=3,PAS=15,TROU=12.4,GY0=18.5,LED=[57.5,82,3.2],PLOTS=[[6.7,6.7],[63.3,6.7],[6.7,85.3],[63.3,85.3]],PLOT_C=5,PLOT_T=2.2,PLOT_H=17,RJ=[28,42,3,COUPE],USB_AR=[12,22,6,11];
 function dans(v,a,b){return v>a&&v<b}
 function rd(v,n){var k=Math.pow(10,n);return String(Math.round(v*k)/k+0)}
 function cross(a,b){return[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]}
@@ -184,6 +184,7 @@ function construire(p){
   function base(x,y,z){
     if(!(x>0&&x<W&&y>0&&y<L&&z>0&&z<COUPE))return false;
     if(cote!=='arriere'&&dans(x,mur[0],mur[1])&&dans(y,usbY[0],usbY[1])&&dans(z,usbZ[0],usbZ[1]))return false;
+    for(var q=0;q<PLOTS.length;q++){var pc=PLOTS[q];if(dans(x,pc[0]-PLOT_C/2,pc[0]+PLOT_C/2)&&dans(y,pc[1]-PLOT_C/2,pc[1]+PLOT_C/2)&&z<PLOT_H)return!(dans(x,pc[0]-PLOT_T/2,pc[0]+PLOT_T/2)&&dans(y,pc[1]-PLOT_T/2,pc[1]+PLOT_T/2)&&z>F)}
     if(poche&&dans(x,px[0],px[1])&&dans(y,yc-11,yc+11)&&z>Math.max(fondLocal,0.6))return false;
     if(dans(x,P,W-P)&&dans(y,P,L-P)&&z>F)return false;
     if(y<P&&dans(x,RJ[0],RJ[1])&&dans(z,RJ[2],RJ[3]))return false;
@@ -195,7 +196,8 @@ function construire(p){
     if(!(x>0&&x<W&&y>0&&y<L&&z>COUPE&&z<H))return false;
     if(z<H-P)return!(dans(x,P,W-P)&&dans(y,P,L-P));
     return!trous().some(function(t){return dans(x,t[0],t[1])&&dans(y,t[2],t[3])})}
-  var bx=[0,P,W-P,W,c,W-c,RJ[0],RJ[1],USB_AR[0],USB_AR[1],px[0],px[1]],by=[0,P,L-P,L,c,L-c,usbY[0],usbY[1],yc-11,yc+11],bz=[0,F,COUPE,c,RJ[2],USB_AR[2],USB_AR[3],usbZ[0],usbZ[1],Math.max(fondLocal,0.6)];
+  var bx=[0,P,W-P,W,c,W-c,RJ[0],RJ[1],USB_AR[0],USB_AR[1],px[0],px[1]],by=[0,P,L-P,L,c,L-c,usbY[0],usbY[1],yc-11,yc+11],bz=[0,F,COUPE,c,RJ[2],USB_AR[2],USB_AR[3],usbZ[0],usbZ[1],Math.max(fondLocal,0.6),PLOT_H];
+  PLOTS.forEach(function(pc){bx.push(pc[0]-PLOT_C/2,pc[0]+PLOT_C/2,pc[0]-PLOT_T/2,pc[0]+PLOT_T/2);by.push(pc[1]-PLOT_C/2,pc[1]+PLOT_C/2,pc[1]-PLOT_T/2,pc[1]+PLOT_T/2)});
   var dx=[0,P,W-P,W,j,e,W-j,W-e,RJ[0]-1,RJ[1]+1,c,W-c],dy=[0,P,L-P,L,j,e,L-j,L-e,c,L-c,usbY[0]-1,usbY[1]+1],dz=[COUPE-LEVRE_H,COUPE,H-P,H,H-c];
   trous().forEach(function(t){dx.push(t[0],t[1]);dy.push(t[2],t[3])});
   var clip=function(v){return v.filter(function(a){return a>=0})};
