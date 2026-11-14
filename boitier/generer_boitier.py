@@ -149,7 +149,11 @@ def mailler(plein, xs, ys, zs, plans):
                 c = ((xs[i] + xs[i + 1]) / 2, (ys[j] + ys[j + 1]) / 2, (zs[k] + zs[k + 1]) / 2)
                 if not plein(*c):
                     continue
-                for f in polyedre_cellule(xs[i], xs[i + 1], ys[j], ys[j + 1], zs[k], zs[k + 1], plans):
+                faces = polyedre_cellule(xs[i], xs[i + 1], ys[j], ys[j + 1], zs[k], zs[k + 1], plans)
+                pts = [p for f in faces for p in f]
+                if pts:  # centre de la cellule coupée, pour orienter les faces vers l'extérieur
+                    c = tuple(sum(p[n] for p in pts) / len(pts) for n in range(3))
+                for f in faces:
                     cle = frozenset(tuple(round(v, 6) for v in p) for p in f)
                     vues[cle] = vues.get(cle, 0) + 1
                     garder.append((cle, f, c))

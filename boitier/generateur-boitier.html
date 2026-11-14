@@ -1,0 +1,288 @@
+<title>Générateur de boîtier</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Atelier : formulaire à gauche, aperçu à droite ; une colonne sur téléphone */
+:root{
+  --bg:#F4F5F0; --panel:#FFFFFF; --ink:#17201A; --mute:#566158; --line:#D3D9CE;
+  --accent:#1E6B4A; --accent-ink:#FFFFFF; --warn-bg:#FFF2E0; --warn-ink:#6B3A00; --ok:#1E6B4A; --bad:#A3271F;
+  --view:#E9ECE4;
+  --display:"Archivo",system-ui,sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#151A16; --panel:#1E2520; --ink:#E7ECE4; --mute:#A3AEA0; --line:#36403A;
+  --accent:#5DBB8A; --accent-ink:#0F1511; --warn-bg:#3A2A12; --warn-ink:#F3CF98; --ok:#6CCB97; --bad:#F08A80; --view:#252D27; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151A16; --panel:#1E2520; --ink:#E7ECE4; --mute:#A3AEA0; --line:#36403A;
+  --accent:#5DBB8A; --accent-ink:#0F1511; --warn-bg:#3A2A12; --warn-ink:#F3CF98; --ok:#6CCB97; --bad:#F08A80; --view:#252D27; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--body)}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:22px}
+h1{font:800 clamp(28px,4vw,40px)/1.1 var(--display);margin:0;text-wrap:balance}
+h2{font:600 18px/1.2 var(--display);margin:0}
+.lead{margin:0;color:var(--mute);max-width:70ch}
+.tag{font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.grid{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start}
+.form{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.out{flex:999 1 480px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:14px}
+label{font-weight:600;font-size:15px;display:flex;flex-direction:column;gap:6px}
+label small{font-weight:400;color:var(--mute);font-size:13px}
+input,select{font:16px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;min-height:44px;box-sizing:border-box;width:100%}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.seg input{position:absolute;opacity:0;width:1px;height:1px}
+.seg label{font-weight:500;align-items:center;justify-content:center;text-align:center;border:1px solid var(--line);border-radius:8px;min-height:44px;cursor:pointer;background:var(--bg)}
+.seg input:checked+span{color:var(--accent-ink)}
+.seg label:has(input:checked){background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.seg label:has(input:focus-visible){outline:3px solid var(--ink);outline-offset:2px}
+details summary{cursor:pointer;font-weight:600}
+.big{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+.big b{font:800 34px var(--display);font-variant-numeric:tabular-nums}
+.big span{color:var(--mute)}
+#vue{width:100%;aspect-ratio:4/3;max-height:460px;background:var(--view);border-radius:10px;touch-action:none;cursor:grab;display:block}
+#profil{width:100%;height:auto;display:block}
+.msgs{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.msgs li{padding:10px 12px;border-radius:8px;font-size:15px}
+.msgs .ok{background:color-mix(in srgb,var(--ok) 14%,transparent);color:var(--ink)}
+.msgs .warn{background:var(--warn-bg);color:var(--warn-ink)}
+.msgs .bad{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--ink)}
+button{font:600 16px var(--body);min-height:48px;border-radius:10px;border:0;background:var(--accent);color:var(--accent-ink);padding:0 20px;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.note{font-size:13px;color:var(--mute);margin:0}
+.warnbox{background:var(--warn-bg);color:var(--warn-ink);border-radius:10px;padding:12px 14px;font-size:14px;margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+</style>
+
+<div class="wrap">
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span class="tag">Pavé balance USB-C · concept</span>
+    <h1>Générateur de boîtier</h1>
+    <p class="lead">Indiquez votre tablette : le générateur place la fiche USB-C à la bonne hauteur pour que le pavé se branche directement, posé à côté sur la même table. Vous récupérez la base et le couvercle en STL.</p>
+  </div>
+  <p class="warnbox">Fichiers jamais imprimés ni testés. Faites d'abord une impression d'essai. La prise de la tablette est fragile : collez des patins antidérapants sous le pavé pour qu'il ne pousse pas sur elle quand on tape.</p>
+
+  <div class="grid">
+    <form class="form" id="form" onsubmit="return false">
+      <div class="card">
+        <h2>1. La tablette</h2>
+        <label for="modele">Modèle
+          <select id="modele"></select>
+          <small>Épaisseurs indicatives : mesurez la vôtre si vous pouvez.</small>
+        </label>
+        <div class="row">
+          <label for="epaisseur">Épaisseur (mm)<input id="epaisseur" type="number" step="0.1" min="3" max="20" value="7.0"></label>
+          <label for="coque">Sous la tablette (mm)<input id="coque" type="number" step="0.1" min="0" max="10" value="0"><small>Épaisseur de coque au dos</small></label>
+        </div>
+      </div>
+      <div class="card">
+        <h2>2. La fiche USB-C</h2>
+        <fieldset style="border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:8px">
+          <legend style="font-weight:600;font-size:15px;padding:0;margin-bottom:6px">Côté du pavé</legend>
+          <div class="seg">
+            <label><input type="radio" name="cote" value="gauche" checked><span>Gauche</span></label>
+            <label><input type="radio" name="cote" value="droite"><span>Droite</span></label>
+            <label><input type="radio" name="cote" value="arriere"><span>Arrière, câble</span></label>
+          </div>
+        </fieldset>
+        <div class="row">
+          <label for="posY">Position le long du côté (mm)<input id="posY" type="number" step="1" min="14" max="78" value="70"><small>Depuis l'avant du pavé</small></label>
+          <label for="ajust">Ajustement de hauteur (mm)<input id="ajust" type="number" step="0.1" min="-3" max="3" value="0"><small>Après l'impression d'essai</small></label>
+        </div>
+      </div>
+      <div class="card">
+        <details>
+          <summary>Réglages avancés</summary>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px">
+            <label for="xiao">Dessous du XIAO → centre de sa prise (mm)<input id="xiao" type="number" step="0.1" min="0.5" max="5" value="1.9"><small>À mesurer sur votre carte</small></label>
+            <div class="row">
+              <label for="paroi">Parois et fond (mm)<input id="paroi" type="number" step="0.1" min="1.2" max="3" value="2.0"></label>
+              <label for="chanfrein">Chanfreins (mm)<input id="chanfrein" type="number" step="0.1" min="0" max="4" value="2.0"></label>
+            </div>
+            <label for="jeu">Jeu de la lèvre du couvercle (mm)<input id="jeu" type="number" step="0.05" min="0" max="0.6" value="0.2"></label>
+          </div>
+        </details>
+      </div>
+    </form>
+
+    <div class="out">
+      <div class="card">
+        <div class="big"><b id="hauteur">3,5 mm</b><span>centre de la fiche au-dessus de la table</span></div>
+        <svg id="profil" viewBox="0 0 640 170" role="img" aria-label="Vue de profil : tablette et pavé posés sur la table, fiche à la hauteur de la prise"></svg>
+        <ul class="msgs" id="msgs"></ul>
+      </div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <h2>Aperçu</h2>
+          <span class="note">Glissez pour tourner</span>
+        </div>
+        <canvas id="vue" aria-label="Aperçu 3D de la base, du couvercle et de la tablette"></canvas>
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+          <button id="telecharger" type="button">Télécharger les STL (.zip)</button>
+          <span class="note mono" id="infos"></span>
+        </div>
+        <p class="note" id="etat" role="status"></p>
+      </div>
+    </div>
+  </div>
+  <p class="note">Boîtier 70 × 92 × 28 mm, pavé 4 × 4 touches de 12 mm, prise RJ12 à l'arrière. Projet libre, à usage d'essai : <a href="https://github.com/nicolasmieral-wq/balance-connectee-otf/tree/main/boitier">github.com/nicolasmieral-wq/balance-connectee-otf</a></p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+'use strict';
+var MODELES=[
+  ['iPad 10e génération',7.0],['iPad Air 11 pouces (M2)',6.1],['iPad Pro 11 pouces (M4)',5.3],['iPad mini (A17 Pro)',6.3],
+  ['Samsung Galaxy Tab A9+',6.9],['Samsung Galaxy Tab S9',5.9],['Autre : je mesure',null]
+];
+var $=function(id){return document.getElementById(id)};
+var sel=$('modele');
+MODELES.forEach(function(m,i){var o=document.createElement('option');o.value=i;o.textContent=m[0]+(m[1]?' (≈ '+m[1].toFixed(1).replace('.',',')+' mm)':'');sel.appendChild(o)});
+sel.onchange=function(){var m=MODELES[sel.value];if(m[1]){$('epaisseur').value=m[1];}else{$('epaisseur').focus();}maj();};
+
+/* ---------- Géométrie : cellules alignées, coupées par les chanfreins ---------- */
+var W=70,L=92,H=28,COUPE=18,LEVRE_EP=1.2,LEVRE_H=3,PAS=15,TROU=12.4,GY0=8,LED=[58,74,3.2],RJ=[44,58,3,COUPE],USB_AR=[12,22,6,11];
+function dans(v,a,b){return v>a&&v<b}
+function rd(v,n){var k=Math.pow(10,n);return String(Math.round(v*k)/k+0)}
+function cross(a,b){return[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]}
+function dot(a,b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]}
+function sub(a,b){return[a[0]-b[0],a[1]-b[1],a[2]-b[2]]}
+function couper(poly,n,d){var out=[];for(var i=0;i<poly.length;i++){var p=poly[i],q=poly[(i+1)%poly.length],sp=dot(n,p)-d,sq=dot(n,q)-d;if(sp<=1e-9)out.push(p);if((sp<-1e-9&&sq>-1e-9)||(sq<-1e-9&&sp>-1e-9)){var t=sp/(sp-sq);out.push([p[0]+t*(q[0]-p[0]),p[1]+t*(q[1]-p[1]),p[2]+t*(q[2]-p[2])])}}return out}
+function nettoyer(poly){var out=[];poly.forEach(function(p){var q=out[out.length-1];if(!q||Math.hypot(p[0]-q[0],p[1]-q[1],p[2]-q[2])>1e-7)out.push(p)});while(out.length>1){var a=out[0],b=out[out.length-1];if(Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2])>1e-7)break;out.pop()}
+  if(out.length<3)return null;var s=[0,0,0];for(var i=1;i<out.length-1;i++){var c=cross(sub(out[i],out[0]),sub(out[i+1],out[0]));s[0]+=c[0];s[1]+=c[1];s[2]+=c[2]}return Math.hypot(s[0],s[1],s[2])>1e-8?out:null}
+function trier(pts,n){var c=[0,0,0];pts.forEach(function(p){c[0]+=p[0];c[1]+=p[1];c[2]+=p[2]});c=c.map(function(v){return v/pts.length});var a=Math.abs(n[0])<0.9?[1,0,0]:[0,1,0],u=cross(n,a),w=cross(n,u);return pts.slice().sort(function(p,q){var dp=sub(p,c),dq=sub(q,c);return Math.atan2(dot(dp,w),dot(dp,u))-Math.atan2(dot(dq,w),dot(dq,u))})}
+function cellule(x0,x1,y0,y1,z0,z1,plans){
+  var v=[];[z0,z1].forEach(function(z){[y0,y1].forEach(function(y){[x0,x1].forEach(function(x){v.push([x,y,z])})})});
+  var faces=[[v[0],v[2],v[3],v[1]],[v[4],v[5],v[7],v[6]],[v[0],v[1],v[5],v[4]],[v[2],v[6],v[7],v[3]],[v[0],v[4],v[6],v[2]],[v[1],v[3],v[7],v[5]]];
+  for(var k=0;k<plans.length;k++){var n=plans[k][0],d=plans[k][1],nv=[],cp={};
+    if(!faces.some(function(f){return f.some(function(q){return dot(n,q)-d>1e-9})}))continue;
+    for(var f=0;f<faces.length;f++){var g=couper(faces[f],n,d),gn=nettoyer(g);if(gn)nv.push(gn);g.forEach(function(p){if(Math.abs(dot(n,p)-d)<1e-7)cp[p.map(function(c){return rd(c,6)}).join()]=p})}
+    if(!nv.length)return[];var u=Object.keys(cp).map(function(k){return cp[k]});var cap=u.length>=3?nettoyer(trier(u,n)):null;if(cap)nv.push(cap);faces=nv}
+  return faces}
+function mailler(plein,xs,ys,zs,plans){
+  function tri(a){return Array.from(new Set(a.map(function(v){return +v.toFixed(4)}))).sort(function(a,b){return a-b})}
+  xs=tri(xs);ys=tri(ys);zs=tri(zs);var vus=new Map(),garde=[];
+  for(var i=0;i<xs.length-1;i++)for(var j=0;j<ys.length-1;j++)for(var k=0;k<zs.length-1;k++){
+    var c=[(xs[i]+xs[i+1])/2,(ys[j]+ys[j+1])/2,(zs[k]+zs[k+1])/2];if(!plein(c[0],c[1],c[2]))continue;
+    var fs=cellule(xs[i],xs[i+1],ys[j],ys[j+1],zs[k],zs[k+1],plans),cg=[0,0,0],nb=0;fs.forEach(function(f){f.forEach(function(q){cg[0]+=q[0];cg[1]+=q[1];cg[2]+=q[2];nb++})});if(nb)c=[cg[0]/nb,cg[1]/nb,cg[2]/nb];fs.forEach(function(f){var cle=f.map(function(p){return p.map(function(v){return rd(v,5)}).join()}).sort().join('|');vus.set(cle,(vus.get(cle)||0)+1);garde.push([cle,f,c])})}
+  var tris=[];garde.forEach(function(e){if(vus.get(e[0])!==1)return;var f=e[1],n=cross(sub(f[1],f[0]),sub(f[2],f[0]));if(dot(n,sub(f[0],e[2]))<0)f=f.slice().reverse();for(var t=1;t<f.length-1;t++)tris.push([f[0],f[t],f[t+1]])});
+  return tris}
+function chanfreins(c,bas,haut){var p=[[[1,1,0],W+L-c],[[-1,1,0],L-c],[[1,-1,0],W-c],[[-1,-1,0],-c]];
+  if(bas)p=p.concat([[[1,0,-1],W-c],[[-1,0,-1],-c],[[0,1,-1],L-c],[[0,-1,-1],-c]]);
+  if(haut)p=p.concat([[[1,0,1],W+H-c],[[-1,0,1],H-c],[[0,1,1],L+H-c],[[0,-1,1],H-c]]);
+  return c>0?p.map(function(e){var l=Math.hypot.apply(null,e[0]);return[e[0],e[1]]}):[]}
+function trous(){var t=[],x0=W/2-(3*PAS+TROU)/2;for(var i=0;i<4;i++)for(var k=0;k<4;k++){var x=x0+i*PAS,y=GY0+k*PAS;t.push([x,x+TROU,y,y+TROU])}t.push([LED[0]-LED[2]/2,LED[0]+LED[2]/2,LED[1]-LED[2]/2,LED[1]+LED[2]/2]);return t}
+
+function construire(p){
+  var P=p.paroi,F=p.paroi,c=p.chanfrein,zc=p.zc,cote=p.cote,yc=p.posY;
+  var usbZ=[Math.max(0,zc-3.2),zc+3.2],usbY=[yc-6,yc+6];
+  var fondLocal=zc-p.xiao,poche=cote!=='arriere'&&fondLocal<F;
+  var px=cote==='gauche'?[P,P+24]:[W-P-24,W-P];
+  var mur=cote==='gauche'?[0,P]:[W-P,W];
+  function base(x,y,z){
+    if(!(x>0&&x<W&&y>0&&y<L&&z>0&&z<COUPE))return false;
+    if(cote!=='arriere'&&dans(x,mur[0],mur[1])&&dans(y,usbY[0],usbY[1])&&dans(z,usbZ[0],usbZ[1]))return false;
+    if(poche&&dans(x,px[0],px[1])&&dans(y,yc-11,yc+11)&&z>Math.max(fondLocal,0.6))return false;
+    if(dans(x,P,W-P)&&dans(y,P,L-P)&&z>F)return false;
+    if(y>L-P){if(cote==='arriere'&&dans(x,USB_AR[0],USB_AR[1])&&dans(z,USB_AR[2],USB_AR[3]))return false;if(dans(x,RJ[0],RJ[1])&&dans(z,RJ[2],RJ[3]))return false}
+    return true}
+  var j=P+p.jeu,e=j+LEVRE_EP;
+  function dessus(x,y,z){
+    if(dans(z,COUPE-LEVRE_H,COUPE)){if(y>L-e&&dans(x,RJ[0]-1,RJ[1]+1))return false;if(cote!=='arriere'&&dans(y,usbY[0]-1,usbY[1]+1)&&(cote==='gauche'?x<e:x>W-e))return false;return dans(x,j,W-j)&&dans(y,j,L-j)&&!(dans(x,e,W-e)&&dans(y,e,L-e))}
+    if(!(x>0&&x<W&&y>0&&y<L&&z>COUPE&&z<H))return false;
+    if(z<H-P)return!(dans(x,P,W-P)&&dans(y,P,L-P));
+    return!trous().some(function(t){return dans(x,t[0],t[1])&&dans(y,t[2],t[3])})}
+  var bx=[0,P,W-P,W,c,W-c,RJ[0],RJ[1],USB_AR[0],USB_AR[1],px[0],px[1]],by=[0,P,L-P,L,c,L-c,usbY[0],usbY[1],yc-11,yc+11],bz=[0,F,COUPE,c,RJ[2],USB_AR[2],USB_AR[3],usbZ[0],usbZ[1],Math.max(fondLocal,0.6)];
+  var dx=[0,P,W-P,W,j,e,W-j,W-e,RJ[0]-1,RJ[1]+1,c,W-c],dy=[0,P,L-P,L,j,e,L-j,L-e,c,L-c,usbY[0]-1,usbY[1]+1],dz=[COUPE-LEVRE_H,COUPE,H-P,H,H-c];
+  trous().forEach(function(t){dx.push(t[0],t[1]);dy.push(t[2],t[3])});
+  var clip=function(v){return v.filter(function(a){return a>=0})};
+  return{base:mailler(base,clip(bx),clip(by),clip(bz),chanfreins(c,true,false)),dessus:mailler(dessus,dx,dy,dz,chanfreins(c,false,true)),fondLocal:fondLocal,poche:poche}}
+
+function ferme(tris){var m=new Map();tris.forEach(function(t){for(var i=0;i<3;i++){var a=t[i].map(function(v){return rd(v,4)}).join(),b=t[(i+1)%3].map(function(v){return rd(v,4)}).join();m.set(a+'>'+b,(m.get(a+'>'+b)||0)+1)}});var ok=true;m.forEach(function(n,k){var s=k.split('>');if((m.get(s[1]+'>'+s[0])||0)!==n)ok=false});return ok}
+
+/* ---------- Fichiers ---------- */
+function stl(tris,nom){var buf=new ArrayBuffer(84+50*tris.length),dv=new DataView(buf),h=('pave balance '+nom).slice(0,80);for(var i=0;i<h.length;i++)dv.setUint8(i,h.charCodeAt(i)&127);dv.setUint32(80,tris.length,true);var o=84;tris.forEach(function(t){var n=cross(sub(t[1],t[0]),sub(t[2],t[0])),l=Math.hypot(n[0],n[1],n[2])||1;[n[0]/l,n[1]/l,n[2]/l].concat(t[0],t[1],t[2]).forEach(function(v){dv.setFloat32(o,v,true);o+=4});dv.setUint16(o,0,true);o+=2});return new Uint8Array(buf)}
+var CRC=(function(){var t=new Uint32Array(256);for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+function crc32(d){var c=0xFFFFFFFF;for(var i=0;i<d.length;i++)c=CRC[(c^d[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
+function zip(fichiers){var parts=[],central=[],off=0,enc=new TextEncoder();
+  fichiers.forEach(function(f){var nom=enc.encode(f.nom),crc=crc32(f.data),h=new DataView(new ArrayBuffer(30));
+    h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(8,0,true);h.setUint32(14,crc,true);h.setUint32(18,f.data.length,true);h.setUint32(22,f.data.length,true);h.setUint16(26,nom.length,true);
+    parts.push(new Uint8Array(h.buffer),nom,f.data);
+    var c=new DataView(new ArrayBuffer(46));c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint32(16,crc,true);c.setUint32(20,f.data.length,true);c.setUint32(24,f.data.length,true);c.setUint16(28,nom.length,true);c.setUint32(42,off,true);
+    central.push(new Uint8Array(c.buffer),nom);off+=30+nom.length+f.data.length});
+  var taille=central.reduce(function(s,a){return s+a.length},0),fin=new DataView(new ArrayBuffer(22));
+  fin.setUint32(0,0x06054b50,true);fin.setUint16(8,fichiers.length,true);fin.setUint16(10,fichiers.length,true);fin.setUint32(12,taille,true);fin.setUint32(16,off,true);
+  return new Blob(parts.concat(central,[new Uint8Array(fin.buffer)]),{type:'application/zip'})}
+
+/* ---------- Interface ---------- */
+var etat={};
+function lire(){var n=function(id){var v=parseFloat(String($(id).value).replace(',','.'));return isFinite(v)?v:0};
+  var cote=document.querySelector('input[name=cote]:checked').value,ep=n('epaisseur'),co=n('coque');
+  return{cote:cote,ep:ep,coque:co,zc:co+ep/2+n('ajust'),posY:Math.min(78,Math.max(14,n('posY'))),xiao:n('xiao'),paroi:Math.min(3,Math.max(1.2,n('paroi'))),chanfrein:Math.min(4,Math.max(0,n('chanfrein'))),jeu:Math.min(0.6,Math.max(0,n('jeu')))}}
+function fr(v){return v.toFixed(1).replace('.',',')}
+function msgs(p,g){var m=[];
+  if(p.cote==='arriere'){m.push(['ok','Fiche à l’arrière : reliez la tablette avec un câble USB-C court. La hauteur n’a pas d’importance.'])}
+  else{
+    if(p.zc<2.0)m.push(['bad','Trop bas : la fiche mesure environ 2,6 mm de haut, son centre ne peut pas descendre sous 2 mm. Surélevez la tablette ou posez le pavé plus bas.']);
+    else if(g.fondLocal<0.6)m.push(['bad','Le XIAO devrait descendre sous le fond : il resterait moins de 0,6 mm de matière. Vérifiez la cote « Dessous du XIAO ».']);
+    else if(g.poche)m.push(['warn','Fond aminci à '+fr(g.fondLocal)+' mm sous le XIAO pour descendre la fiche. Imprimez avec des couches fines.']);
+    else m.push(['ok','Le XIAO repose sur une cale de '+fr(g.fondLocal-p.paroi)+' mm au-dessus du fond, à imprimer ou à découper.']);
+    if(p.zc+3.2>COUPE-1)m.push(['bad','Trop haut pour la base : au-delà d’environ 14 mm, la fiche toucherait le couvercle.']);
+    m.push(['warn','Un adaptateur USB-C mâle-mâle droit traverse la paroi : sa longueur décide de combien la fiche dépasse.'])}
+  m.push([g.ferme?'ok':'bad',g.ferme?'Maillages fermés, prêts pour le trancheur.':'Maillage non fermé : changez une valeur, puis signalez-le sur le dépôt.']);
+  $('msgs').innerHTML='';m.forEach(function(e){var li=document.createElement('li');li.className=e[0];li.textContent=e[1];$('msgs').appendChild(li)})}
+function profil(p){var s=$('profil'),k=5,y0=150,col=getComputedStyle(document.documentElement);function c(n){return col.getPropertyValue(n).trim()}
+  var zc=p.cote==='arriere'?null:p.zc,tabH=p.ep,html='';
+  html+='<rect x="0" y="'+y0+'" width="640" height="20" fill="'+c('--line')+'"/>';
+  html+='<text x="12" y="'+(y0+15)+'" font-size="13" fill="'+c('--mute')+'" font-family="IBM Plex Sans,sans-serif">table</text>';
+  if(p.coque>0)html+='<rect x="20" y="'+(y0-p.coque*k)+'" width="300" height="'+(p.coque*k)+'" fill="'+c('--mute')+'" opacity=".35"/>';
+  html+='<rect x="20" y="'+(y0-(p.coque+tabH)*k)+'" width="300" height="'+(tabH*k)+'" rx="6" fill="'+c('--ink')+'"/>';
+  html+='<text x="40" y="'+(y0-(p.coque+tabH/2)*k+5)+'" font-size="14" fill="'+c('--panel')+'" font-family="IBM Plex Sans,sans-serif">tablette</text>';
+  var bx=340,bw=280,bh=H*k*0.62;
+  html+='<rect x="'+bx+'" y="'+(y0-bh)+'" width="'+bw+'" height="'+bh+'" rx="8" fill="'+c('--accent')+'" opacity=".85"/>';
+  html+='<text x="'+(bx+bw/2)+'" y="'+(y0-bh/2+5)+'" font-size="14" text-anchor="middle" fill="'+c('--accent-ink')+'" font-family="IBM Plex Sans,sans-serif">pavé (vue raccourcie)</text>';
+  if(zc!==null){var yz=y0-zc*k;html+='<rect x="'+(320)+'" y="'+(yz-6.5)+'" width="24" height="13" rx="3" fill="#9AA0A8"/>';
+    html+='<line x1="8" y1="'+yz+'" x2="20" y2="'+yz+'" stroke="'+c('--ink')+'" stroke-width="2"/>';
+}
+  s.innerHTML=html}
+
+var renderer=null,scene,camera,groupe,rotX=-0.95,rotZ=0.6;
+function init3d(){if(!window.THREE)return;var cv=$('vue');renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});scene=new THREE.Scene();
+  camera=new THREE.PerspectiveCamera(35,4/3,1,2000);camera.position.set(0,0,300);
+  scene.add(new THREE.AmbientLight(0xffffff,0.55));var dl=new THREE.DirectionalLight(0xffffff,0.75);dl.position.set(-0.6,-1,1.4);scene.add(dl);
+  var drag=null;cv.addEventListener('pointerdown',function(e){drag=[e.clientX,e.clientY];cv.setPointerCapture(e.pointerId);cv.style.cursor='grabbing'});
+  cv.addEventListener('pointermove',function(e){if(!drag)return;rotZ+=(e.clientX-drag[0])*0.01;rotX=Math.max(-1.55,Math.min(0,rotX+(e.clientY-drag[1])*0.01));drag=[e.clientX,e.clientY];dessiner()});
+  cv.addEventListener('pointerup',function(){drag=null;cv.style.cursor='grab'});
+  new ResizeObserver(dessiner).observe(cv)}
+function geo(tris){var g=new THREE.BufferGeometry(),a=new Float32Array(tris.length*9),o=0;tris.forEach(function(t){t.forEach(function(p){a[o++]=p[0];a[o++]=p[1];a[o++]=p[2]})});g.setAttribute('position',new THREE.BufferAttribute(a,3));g.computeVertexNormals();return g}
+function maj3d(g,p){if(!renderer)return;if(groupe)scene.remove(groupe);groupe=new THREE.Group();
+  var mat=function(c,o){return new THREE.MeshLambertMaterial({color:c,flatShading:true,transparent:o<1,opacity:o})};
+  var b=new THREE.Mesh(geo(g.base),mat(0xC9D1C6,1)),d=new THREE.Mesh(geo(g.dessus),mat(0xE9ECE4,1));d.position.z=26;groupe.add(b,d);
+  if(p.cote!=='arriere'){var tw=150,tab=new THREE.Mesh(new THREE.BoxGeometry(tw,110,p.ep),mat(0x2B3A30,0.55));tab.position.set(p.cote==='gauche'?-tw/2-12:W+tw/2+12,p.posY,p.coque+p.ep/2);groupe.add(tab);
+    var fiche=new THREE.Mesh(new THREE.BoxGeometry(14,8.4,2.6),mat(0x9AA0A8,1));fiche.position.set(p.cote==='gauche'?-5:W+5,p.posY,p.zc);groupe.add(fiche)}
+  var tbl=new THREE.Mesh(new THREE.PlaneGeometry(420,220),mat(0x8A958C,0.18));tbl.position.set(W/2+(p.cote==='droite'?60:p.cote==='gauche'?-60:0),46,-0.05);groupe.add(tbl);
+  groupe.position.set(-W/2-(p.cote==='droite'?60:p.cote==='gauche'?-60:0),-46,-20);var pivot=new THREE.Group();pivot.add(groupe);scene.userData.pivot&&scene.remove(scene.userData.pivot);scene.userData.pivot=pivot;scene.add(pivot);dessiner()}
+function dessiner(){if(!renderer||!scene.userData.pivot)return;var cv=$('vue'),w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.setSize(w,h,false);camera.aspect=w/h;camera.position.z=w<500?380:300;camera.updateProjectionMatrix();var pv=scene.userData.pivot;pv.rotation.set(rotX,0,rotZ);renderer.render(scene,camera)}
+
+var minuteur=null;
+function maj(){clearTimeout(minuteur);minuteur=setTimeout(function(){
+  var p=lire(),g=construire(p);g.ferme=ferme(g.base)&&ferme(g.dessus);etat={p:p,g:g};
+  $('hauteur').textContent=p.cote==='arriere'?'Câble':fr(p.zc)+' mm';
+  $('infos').textContent=g.base.length+' + '+g.dessus.length+' triangles';
+  msgs(p,g);profil(p);maj3d(g,p)},60)}
+document.querySelectorAll('#form input,#form select').forEach(function(el){el.addEventListener('input',maj);el.addEventListener('change',maj)});
+
+var outil=null;
+$('telecharger').onclick=async function(){
+  if(!etat.g)return;var p=etat.p,nomZ=p.cote==='arriere'?'arriere':p.cote+'-'+fr(p.zc).replace(',','_')+'mm';
+  var z=zip([{nom:'boitier-base-'+nomZ+'.stl',data:stl(etat.g.base,'base')},{nom:'boitier-dessus.stl',data:stl(etat.g.dessus,'dessus')},
+    {nom:'LISEZMOI.txt',data:new TextEncoder().encode('Pavé balance USB-C, boîtier généré.\r\nFiche : '+(p.cote==='arriere'?'arrière (câble)':p.cote+', centre à '+fr(p.zc)+' mm de la table')+'\r\nTablette '+fr(p.ep)+' mm, sous la tablette '+fr(p.coque)+' mm, ajustement '+fr(p.zc-p.coque-p.ep/2)+' mm.\r\nParois '+fr(p.paroi)+' mm, chanfreins '+fr(p.chanfrein)+' mm, jeu '+p.jeu+' mm.\r\nFichiers non testés : faites une impression d\'essai.\r\n')}]);
+  try{if(!outil)outil=await claude.use('downloads');if(!outil){$('etat').textContent='Le téléchargement n’est pas disponible dans cette vue.';return}
+    await outil.save({filename:'boitier-pave-'+nomZ+'.zip',data:z});$('etat').textContent='Fichier enregistré.'}
+  catch(e){var c=e&&e.code;$('etat').textContent=c==='declined'?'Téléchargement annulé.':c==='rate_limited'?'Une demande est déjà ouverte : réessayez dans un instant.':'Téléchargement impossible ici ('+(c||'erreur')+').'}};
+
+init3d();maj();
+})();
+</script>
