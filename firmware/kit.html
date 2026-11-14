@@ -1,0 +1,411 @@
+<title>Pavé balance OTF</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Mise en page : fiche d'atelier, une colonne de lecture, sections numérotées par le vrai ordre de montage */
+:root{
+  --papier:#f3f5f2; --surface:#ffffff; --encre:#18211c; --doux:#56625a; --trait:#d5dbd4;
+  --vernis:#1f6b45; --vernis-clair:#e3efe7; --cuivre:#a8612b; --alerte:#9a3b1c; --alerte-fond:#fbeee6;
+  --code-fond:#16201a; --code-texte:#d9e6dc;
+  --f-titre:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-texte:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --papier:#111613; --surface:#18201b; --encre:#e6ece7; --doux:#9fada3; --trait:#2c3830;
+  --vernis:#5cc08b; --vernis-clair:#1d3226; --cuivre:#e09a5f; --alerte:#f0a07a; --alerte-fond:#2e1d15;
+  --code-fond:#0b100d; --code-texte:#d9e6dc; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --papier:#111613; --surface:#18201b; --encre:#e6ece7; --doux:#9fada3; --trait:#2c3830;
+  --vernis:#5cc08b; --vernis-clair:#1d3226; --cuivre:#e09a5f; --alerte:#f0a07a; --alerte-fond:#2e1d15;
+  --code-fond:#0b100d; --code-texte:#d9e6dc; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--papier);color:var(--encre);font:16px/1.6 var(--f-texte);margin:0}
+.page{max-width:1080px;margin:0 auto;padding-block:28px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--f-titre);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(34px,6vw,56px);font-weight:800;letter-spacing:-.01em}
+h2{font-size:clamp(26px,3.6vw,34px);font-weight:700}
+h3{font-size:19px;font-weight:700}
+p{margin:0;max-width:68ch}
+a{color:var(--vernis)}
+code,kbd,.mono{font-family:var(--f-mono);font-size:.92em}
+kbd{border:1px solid var(--trait);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--surface)}
+.eyebrow{font:600 12px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--cuivre)}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:70px}
+.tete{display:flex;flex-direction:column;gap:16px}
+.lead{font-size:19px;color:var(--doux);max-width:60ch}
+.avert{border:1px solid var(--alerte);background:var(--alerte-fond);color:var(--encre);border-radius:8px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+.avert strong{color:var(--alerte)}
+nav.sommaire{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--papier);border-bottom:1px solid var(--trait);margin-inline:-4px;padding:10px 4px;display:flex;gap:6px;flex-wrap:wrap}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--papier)}
+nav.sommaire a{font:500 14px/1 var(--f-texte);color:var(--encre);text-decoration:none;padding:8px 12px;border-radius:999px;border:1px solid var(--trait);background:var(--surface)}
+nav.sommaire a:hover,nav.sommaire a:focus-visible{border-color:var(--vernis);color:var(--vernis);outline:none}
+.vues{display:grid;grid-template-columns:1.25fr 1fr;gap:16px}
+.vues figure{margin:0;background:var(--surface);border:1px solid var(--trait);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.vues figure img{width:100%;height:auto;display:block;border-radius:4px;background:#fff}
+figcaption{font-size:14px;color:var(--doux)}
+.vues .haute{grid-row:span 2}
+.faits{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.fait{border-top:2px solid var(--vernis);padding-top:10px;display:flex;flex-direction:column;gap:4px}
+.fait b{font:700 15px var(--f-titre)}
+.fait span{font-size:14.5px;color:var(--doux)}
+.tableau{overflow-x:auto;border:1px solid var(--trait);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:15px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--trait);vertical-align:top}
+th{font:600 12px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--doux);background:var(--vernis-clair)}
+tr:last-child td{border-bottom:0}
+td.q{font:500 15px var(--f-mono);white-space:nowrap;font-variant-numeric:tabular-nums}
+/* Générateur */
+.gen{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:20px;align-items:start}
+.panneau{background:var(--surface);border:1px solid var(--trait);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.champ{display:flex;flex-direction:column;gap:6px}
+.champ>span{font-weight:600;font-size:14.5px}
+.champ small{color:var(--doux);font-size:13px}
+select,input[type=text],input[type=number]{font:15px var(--f-texte);color:var(--encre);background:var(--papier);border:1px solid var(--trait);border-radius:7px;padding:8px 10px;width:100%}
+select:focus-visible,input:focus-visible,button:focus-visible{outline:2px solid var(--vernis);outline-offset:2px}
+.deux{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.coche{display:flex;gap:10px;align-items:flex-start;font-size:14.5px}
+.coche input{margin-top:4px;accent-color:var(--vernis)}
+.pave{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;background:#2a302c;padding:10px;border-radius:10px}
+.pave select{background:#3b423d;color:#f0f3f0;border-color:#525a54;font:500 13px var(--f-texte);padding:10px 4px;text-align:center;min-height:52px}
+.pave-legende{display:flex;justify-content:space-between;font-size:12.5px;color:var(--doux)}
+.boutons{display:flex;gap:10px;flex-wrap:wrap}
+button{font:600 15px var(--f-texte);border-radius:8px;padding:10px 16px;cursor:pointer;border:1px solid var(--vernis)}
+.principal{background:var(--vernis);color:var(--surface)}
+.second{background:transparent;color:var(--vernis)}
+.etat{font-size:14px;color:var(--doux);min-height:1.4em}
+pre.code{margin:0;background:var(--code-fond);color:var(--code-texte);font:12.5px/1.55 var(--f-mono);padding:16px;border-radius:10px;overflow:auto;max-height:560px;white-space:pre}
+/* Pas à pas */
+.phases{display:flex;flex-direction:column;gap:28px}
+.phase{display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px;border-top:1px solid var(--trait);padding-top:18px}
+.phase>header{display:flex;flex-direction:column;gap:6px}
+.phase>header .lettre{font:800 40px/1 var(--f-titre);color:var(--vernis)}
+.phase>header h3{font-size:17px}
+.etapes{counter-reset:e;display:flex;flex-direction:column;gap:14px;margin:0;padding:0;list-style:none}
+.etapes li{counter-increment:e;display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px}
+.etapes li::before{content:counter(e);font:600 14px/28px var(--f-mono);text-align:center;width:28px;height:28px;border-radius:50%;border:1px solid var(--trait);background:var(--surface);color:var(--doux)}
+.etapes li>div{display:flex;flex-direction:column;gap:6px}
+.etapes b{font-weight:600}
+.verif{border-left:3px solid var(--cuivre);padding:4px 0 4px 12px;font-size:14.5px;color:var(--doux)}
+.led{display:inline-flex;gap:3px;vertical-align:middle;margin-right:6px}
+.led i{width:8px;height:8px;border-radius:50%;background:var(--cuivre);display:block}
+.fichiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.fichier{background:var(--surface);border:1px solid var(--trait);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.fichier p{font-size:14.5px;color:var(--doux)}
+.fichier .boutons{margin-top:auto}
+@media (max-width:820px){.vues,.gen{grid-template-columns:1fr}.vues .haute{grid-row:auto}.phase{grid-template-columns:1fr;gap:10px}.phase>header{flex-direction:row;align-items:baseline;gap:12px}.phase>header .lettre{font-size:30px}}
+@media (max-width:460px){.deux{grid-template-columns:1fr}.pave select{font-size:11.5px;min-height:46px}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+
+<div class="page">
+  <header class="tete">
+    <span class="eyebrow">Les Jardins Pentus · kit à monter soi-même</span>
+    <h1>Pavé balance OTF</h1>
+    <p class="lead">Un pavé numérique de 16 touches qui se branche en USB-C sur une tablette Android ou un iPad, comme un clavier. Pour les essais, une touche « Peser » tape le poids lu sur la balance Elicom S300FM.</p>
+    <div class="avert" role="note"><div><strong>Prototype non fabriqué, non testé.</strong> La saisie au clavier est la pratique normale. Le lien automatique balance → caisse (touches Peser et Auto) doit être certifié pour vendre au poids : réservé aux essais, sur une ferme de démonstration, jamais à la vente. L'auteur n'est pas responsable de l'usage qui en est fait.</div></div>
+  </header>
+
+  <nav class="sommaire" aria-label="Sommaire">
+    <a href="#maquette">Maquette</a><a href="#achats">Liste d'achats</a><a href="#firmware">Programme</a><a href="#pas-a-pas">Pas à pas</a><a href="#depannage">Dépannage</a><a href="#fichiers">Fichiers</a>
+  </nav>
+
+  <section id="maquette">
+    <span class="eyebrow">Maquette</span>
+    <h2>Le pavé, le boîtier et le circuit</h2>
+    <div class="vues">
+      <figure class="haute"><img src="img/circuit.jpg" alt="Dessin du circuit imprimé : 16 touches, MAX3232 à l'arrière, prise RJ12 au bord avant" width="939" height="1296"><figcaption>Circuit 62,6 × 84,6 mm, 2 couches, entièrement routé. Rouge : pistes du dessus, bleu : pistes du dessous. Contrôle KiCad : 0 erreur.</figcaption></figure>
+      <figure><img src="img/vue-boitier-ferme.jpg" alt="Boîtier fermé avec ses 16 touches et la LED" width="708" height="595"><figcaption>Boîtier imprimé 70 × 92 × 28 mm, LED en haut à droite, prise RJ12 au milieu du bord avant.</figcaption></figure>
+      <figure><img src="img/vue-isometrique.jpg" alt="Vue éclatée : couvercle, circuit avec touches, base avec plots" width="1400" height="819"><figcaption>Vue éclatée : couvercle, circuit posé sur 4 plots, XIAO suspendu dessous, prise USB-C sur le côté gauche.</figcaption></figure>
+    </div>
+    <div class="faits">
+      <div class="fait"><b>Saisie normale</b><span>Chiffres, double zéro, virgule, Effacer, Entrée : le pavé tape comme un clavier.</span></div>
+      <div class="fait"><b>Peser (essai)</b><span>Attend une pesée stable puis tape le poids, par exemple <code>1,245</code>.</span></div>
+      <div class="fait"><b>Auto (essai)</b><span>Tape chaque nouvelle pesée stable, y compris quand on ajoute au panier sans revenir à zéro.</span></div>
+      <div class="fait"><b>Android et iPad</b><span>Reconnu comme un clavier USB : aucune application ni Bluetooth à installer.</span></div>
+    </div>
+  </section>
+
+  <section id="achats">
+    <span class="eyebrow">Liste d'achats</span>
+    <h2>Les pièces à commander</h2>
+    <div class="tableau"><table>
+      <thead><tr><th>Qté</th><th>Pièce</th><th>Détail à vérifier</th><th>Repère</th></tr></thead>
+      <tbody>
+        <tr><td class="q">1</td><td>Circuit imprimé pave-balance</td><td>Fichier <code>pave-balance-gerbers.zip</code>. Les fabricants en livrent 5 au minimum.</td><td>—</td></tr>
+        <tr><td class="q">1</td><td>Seeed Studio XIAO ESP32-S3</td><td>Version simple, sans « Sense » (caméra inutile).</td><td>J2, J3</td></tr>
+        <tr><td class="q">2</td><td>Barrettes mâles 1 × 7, pas de 2,54 mm, broches longues</td><td>Broches d'au moins 20 mm, ou une barrette 1 × 40 longue à couper. Le XIAO pend à environ 14 mm sous le circuit.</td><td>J2, J3</td></tr>
+        <tr><td class="q">1</td><td>MAX3232CPE (boîtier DIP-16)</td><td>Version « 3232 » (3,3 V), pas MAX232.</td><td>U1</td></tr>
+        <tr><td class="q">1</td><td>Support de circuit intégré DIP-16</td><td>Évite de chauffer la puce.</td><td>U1</td></tr>
+        <tr><td class="q">5</td><td>Condensateurs céramique 100 nF</td><td>Écart des pattes 2,5 ou 2,54 mm. Marqués « 104 ».</td><td>C1 à C5</td></tr>
+        <tr><td class="q">1</td><td>Résistance 330 Ω, ¼ W</td><td>Anneaux orange, orange, marron.</td><td>R1</td></tr>
+        <tr><td class="q">1</td><td>LED 3 mm</td><td>Couleur au choix.</td><td>D1</td></tr>
+        <tr><td class="q">16</td><td>Boutons poussoirs 12 × 12 mm traversants</td><td>4 pattes. Hauteur totale bouton + capuchon : 10,5 à 11,5 mm (étape C).</td><td>SW1 à SW16</td></tr>
+        <tr><td class="q">16</td><td>Capuchons carrés pour boutons 12 × 12 mm</td><td>Une couleur différente pour Peser, Entrée, Effacer aide au marché.</td><td>—</td></tr>
+        <tr><td class="q">1</td><td>Prise RJ12 6 contacts pour circuit imprimé</td><td>Empreinte Amphenol 54601 (6P6C). Comparer le plan du vendeur avec l'empreinte avant d'acheter.</td><td>J1</td></tr>
+        <tr><td class="q">4</td><td>Vis M2,5 × 6 mm pour plastique</td><td>Se vissent dans les plots imprimés (trous de 2,2 mm).</td><td>H1 à H4</td></tr>
+        <tr><td class="q">1</td><td>Câble téléphonique RJ12 6 fils, droit</td><td>Mêmes couleurs dans le même ordre aux deux bouts, prises tenues côte à côte.</td><td>—</td></tr>
+        <tr><td class="q">1</td><td>Câble USB-C ↔ USB-C court</td><td>Ou USB-C ↔ USB-A avec un adaptateur OTG pour une tablette en micro-USB.</td><td>—</td></tr>
+        <tr><td class="q">≈ 40 g</td><td>Filament PETG ou PLA</td><td>Pour la base et le couvercle.</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Outils :</b> fer à souder réglable (330 à 350 °C) et étain fin de 0,8 mm avec flux, pince coupante, multimètre, pied à coulisse, petite planche d'essai (breadboard), tournevis, ordinateur, imprimante 3D ou service d'impression.</p>
+  </section>
+
+  <section id="firmware">
+    <span class="eyebrow">Générateur de programme</span>
+    <h2>Le programme du XIAO, réglé pour ta tablette</h2>
+    <p>Choisis les réglages, vérifie la disposition des touches, puis télécharge le programme. Il s'ouvre dans Arduino IDE (étape H).</p>
+    <div class="gen">
+      <form class="panneau" id="formulaire" autocomplete="off">
+        <label class="champ"><span>Clavier de la tablette</span>
+          <select id="disposition">
+            <option value="azerty" selected>AZERTY (France)</option>
+            <option value="qwerty">QWERTY (anglais US)</option>
+            <option value="pave">Pavé numérique (indépendant de la langue)</option>
+          </select>
+          <small>La langue du « clavier physique » réglée sur la tablette. Si les chiffres sortent en &amp; é " ', change ce réglage.</small>
+        </label>
+        <div class="deux">
+          <label class="champ"><span>Séparateur décimal</span>
+            <select id="separateur"><option value="," selected>Virgule ( , )</option><option value=".">Point ( . )</option></select>
+          </label>
+          <label class="champ"><span>Poids tapé en</span>
+            <select id="unite"><option value="kg3" selected>kg, 3 décimales</option><option value="kg2">kg, 2 décimales</option><option value="g">grammes</option></select>
+          </label>
+          <label class="champ"><span>Après la pesée</span>
+            <select id="apres"><option value="rien" selected>Rien</option><option value="ent">Touche Entrée</option><option value="tab">Touche Tabulation</option></select>
+          </label>
+          <label class="champ"><span>Vitesse de la balance</span>
+            <select id="vitesse"><option value="9600" selected>9600 bauds</option><option value="4800">4800 bauds</option><option value="2400">2400 bauds</option><option value="19200">19200 bauds</option></select>
+          </label>
+        </div>
+        <label class="champ"><span>Nom du clavier vu par la tablette</span><input id="nom" type="text" maxlength="30" value="Pave balance"></label>
+        <label class="coche"><input id="auto" type="checkbox"><span>Autoriser la touche Auto (essai seulement). Décochée, la touche Auto fait un simple éclair.</span></label>
+        <div class="champ"><span>Disposition des touches</span>
+          <div class="pave-legende"><span>arrière du pavé (LED)</span><span>vue de dessus</span></div>
+          <div class="pave" id="pave"></div>
+          <div class="pave-legende"><span>bord avant (prise RJ12)</span><button type="button" class="second" id="defaut" style="padding:4px 10px;font-size:13px">Disposition d'origine</button></div>
+        </div>
+      </form>
+      <div class="panneau">
+        <div class="boutons">
+          <button type="button" class="principal" id="telecharger">Télécharger le programme (.zip)</button>
+          <button type="button" class="second" id="copier">Copier le code</button>
+        </div>
+        <div class="etat" id="etat" aria-live="polite"></div>
+        <pre class="code" id="code" tabindex="0" aria-label="Code du programme"></pre>
+      </div>
+    </div>
+  </section>
+
+  <section id="pas-a-pas">
+    <span class="eyebrow">Pas à pas</span>
+    <h2>De la commande au marché, de A à Z</h2>
+    <p>Compte deux à trois semaines de livraison et une demi-journée de montage. Les étapes sont dans l'ordre : chaque contrôle évite une erreur coûteuse à l'étape suivante.</p>
+    <div class="phases">
+
+      <article class="phase"><header><span class="lettre">A</span><h3>Comprendre</h3></header>
+        <ol class="etapes">
+          <li><div><p>Le pavé contient un petit ordinateur, le <b>XIAO ESP32-S3</b>. Branché en USB-C, la tablette le voit comme un clavier : chaque touche tape un caractère dans le champ sélectionné.</p></div></li>
+          <li><div><p>La balance envoie son poids en continu par sa prise RJ12. Le <b>MAX3232</b> convertit ce signal pour le XIAO. Rien n'est jamais envoyé à la balance.</p></div></li>
+          <li><div><p>Lis l'avertissement en haut de page : Peser et Auto servent aux essais. Au marché, on tape le poids lu sur la balance.</p></div></li>
+        </ol></article>
+
+      <article class="phase"><header><span class="lettre">B</span><h3>Commander les pièces</h3></header>
+        <ol class="etapes">
+          <li><div><p>Commande les pièces de la <a href="#achats">liste d'achats</a>, sauf le circuit imprimé. On le commandera après les mesures de l'étape C.</p></div></li>
+          <li><div><p>Pour les boutons, prends des 12 × 12 mm avec un capuchon assorti, vendus ensemble si possible.</p></div></li>
+        </ol></article>
+
+      <article class="phase"><header><span class="lettre">C</span><h3>Mesurer avant de commander le circuit</h3></header>
+        <ol class="etapes">
+          <li><div><p><b>XIAO :</b> pique le XIAO, broches soudées ou simplement posées, sur la planche d'essai en enjambant la rainure centrale.</p><p class="verif">Les deux rangées de broches doivent être séparées de 6 trous (15,24 mm). Sinon, ne commande pas le circuit et signale-le.</p></div></li>
+          <li><div><p><b>Boutons :</b> pose un capuchon sur un bouton et mesure la hauteur totale au pied à coulisse.</p><p class="verif">Entre 10,5 et 11,5 mm : le capuchon dépassera de 1 à 2 mm du couvercle. En dessous, il restera enfoncé ; au-dessus, il dépassera trop.</p></div></li>
+          <li><div><p><b>Prise RJ12 :</b> compare le plan du vendeur au dessin de l'empreinte Amphenol 54601 : 6 pattes en quinconce et 2 tétons en plastique.</p></div></li>
+        </ol></article>
+
+      <article class="phase"><header><span class="lettre">D</span><h3>Commander le circuit</h3></header>
+        <ol class="etapes">
+          <li><div><p>Télécharge <code>pave-balance-gerbers.zip</code> (rubrique <a href="#fichiers">Fichiers</a>). Ne le décompresse pas.</p></div></li>
+          <li><div><p>Chez le fabricant (JLCPCB, PCBWay, Aisler…), choisis « devis de circuit » et dépose le ZIP. Le site affiche le circuit : vérifie qu'il mesure 62,6 × 84,6 mm.</p></div></li>
+          <li><div><p>Réglages : 2 couches, épaisseur 1,6 mm, finition HASL, quantité 5, couleur au choix, sans assemblage. Laisse le reste par défaut.</p></div></li>
+        </ol></article>
+
+      <article class="phase"><header><span class="lettre">E</span><h3>Imprimer le boîtier</h3></header>
+        <ol class="etapes">
+          <li><div><p>Récupère <code>boitier-base.stl</code> et <code>boitier-dessus.stl</code> sur GitHub (rubrique <a href="#fichiers">Fichiers</a>). La prise USB-C sort sur le côté gauche ; on la relie à la tablette par un câble court.</p></div></li>
+          <li><div><p>PETG ou PLA, couches de 0,2 mm, sans supports. Base posée à plat, couvercle retourné (dessus contre le plateau).</p></div></li>
+          <li><div><p>Emboîte les deux pièces à vide. Elles doivent se tenir sans forcer. Garde le boîtier ouvert jusqu'à l'étape L.</p></div></li>
+        </ol></article>
+
+      <article class="phase"><header><span class="lettre">F</span><h3>Souder, du plus bas au plus haut</h3></header>
+        <ol class="etapes">
+          <li><div><p>Toutes les pièces se posent sur la face marquée « Pavé balance OTF v0.1 », sauf la prise RJ12 et le XIAO, qui se posent dessous. Après chaque soudure, coupe les pattes qui dépassent.</p></div></li>
+          <li><div><p><b>R1</b> (330 Ω), sans sens. Puis les 5 condensateurs <b>C1 à C5</b>, sans sens non plus.</p></div></li>
+          <li><div><p><b>Support DIP-16</b> à l'emplacement U1 : son encoche du côté de la pastille carrée (à gauche).</p></div></li>
+          <li><div><p><b>LED D1</b> : la patte longue (+) dans la pastille ronde, la patte courte (côté plat) dans la pastille carrée.</p></div></li>
+          <li><div><p><b>Les 16 boutons</b> : enfonce chaque bouton jusqu'au bout, ses 4 pattes passent d'elles-mêmes. Soude les 4 pattes, bouton bien à plat.</p></div></li>
+          <li><div><p><b>Prise RJ12</b> : insère-la par le dessous, ouverture vers le bord avant, tétons dans les deux grands trous. Soude ses 6 pattes sur le dessus.</p></div></li>
+          <li><div><p><b>XIAO</b> : soude d'abord les deux barrettes longues sur le XIAO, petit côté des broches dans le XIAO, puce vers le haut. Présente ensuite le XIAO sous le circuit, prise USB-C vers le bord gauche, les broches dans les rangées J2 et J3. Cale-le à environ 14 mm sous le circuit, puis soude les 14 broches sur le dessus.</p></div></li>
+          <li><div><p>Enfonce le <b>MAX3232</b> dans son support, encoche du même côté que celle du support.</p></div></li>
+          <li><div><p class="verif">Contrôle au multimètre (mode bip) : aucun bip entre la broche 3V3 et la broche GND du XIAO. Regarde chaque soudure à la loupe : aucune goutte ne doit relier deux pastilles.</p></div></li>
+        </ol></article>
+
+      <article class="phase"><header><span class="lettre">G</span><h3>Installer Arduino IDE</h3></header>
+        <ol class="etapes">
+          <li><div><p>Télécharge et installe <b>Arduino IDE 2</b> depuis <a href="https://www.arduino.cc/en/software" target="_blank" rel="noopener">arduino.cc/en/software</a>.</p></div></li>
+          <li><div><p>Menu <b>Fichier → Préférences</b>, champ « URL de gestionnaire de cartes supplémentaires », colle :</p><p><code>https://espressif.github.io/arduino-esp32/package_esp32_index.json</code></p></div></li>
+          <li><div><p>Menu <b>Outils → Carte → Gestionnaire de cartes</b>, cherche <b>esp32</b>, installe celui d'<b>Espressif Systems</b>.</p></div></li>
+          <li><div><p>Menu <b>Outils → Carte → esp32 → XIAO_ESP32S3</b>, puis <b>Outils → USB Mode → USB-OTG (TinyUSB)</b>. Ce dernier réglage permet au XIAO de se présenter comme un clavier.</p></div></li>
+        </ol></article>
+
+      <article class="phase"><header><span class="lettre">H</span><h3>Charger le programme</h3></header>
+        <ol class="etapes">
+          <li><div><p>Dans le <a href="#firmware">générateur</a>, choisis la langue du clavier de ta tablette et la façon de taper le poids, puis <b>Télécharger le programme</b>. Décompresse le ZIP : tu obtiens un dossier <code>pave_balance</code>.</p></div></li>
+          <li><div><p>Ouvre <code>pave_balance.ino</code> dans Arduino IDE. Branche le XIAO à l'ordinateur et choisis son port dans la liste en haut.</p></div></li>
+          <li><div><p>Clique sur la flèche <b>Téléverser</b>. Attends « Téléversement terminé ».</p></div></li>
+          <li><div><p>Si le port n'apparaît pas ou si l'envoi échoue : débranche, maintiens le petit bouton <kbd>B</kbd> (BOOT) du XIAO, rebranche, relâche, téléverse, puis appuie sur <kbd>R</kbd> (RESET). Fais pareil pour chaque mise à jour du programme.</p><p class="verif">Au démarrage, la LED fait 3 éclairs.</p></div></li>
+        </ol></article>
+
+      <article class="phase"><header><span class="lettre">I</span><h3>Tester sans balance</h3></header>
+        <ol class="etapes">
+          <li><div><p>Branche le pavé sur la tablette (câble USB-C, ou adaptateur OTG). Ouvre une application de notes.</p></div></li>
+          <li><div><p>Appuie sur chaque touche : 0 à 9, 00, la virgule, Effacer, Entrée.</p><p class="verif">Si tu obtiens &amp; é " ' au lieu de 1 2 3 4 : change « Clavier de la tablette » dans le générateur et recharge le programme. Sur Android, la langue du clavier physique se règle dans les Paramètres, rubrique clavier physique (Samsung : Gestion globale → Clavier physique).</p></div></li>
+          <li><div><p>Une touche qui ne répond pas : regarde ses 4 soudures et les soudures du XIAO.</p></div></li>
+        </ol></article>
+
+      <article class="phase"><header><span class="lettre">J</span><h3>Préparer la balance</h3></header>
+        <ol class="etapes">
+          <li><div><p>Dans le menu de réglage de l'Elicom S300FM (notice, chapitre communication) : <code>PROT1 = 08</code>, <code>BAUD1 = 009.6</code>, <code>PAR-1 = 00</code>, <code>NET1 = 00</code>. Ce sont les réglages déjà validés avec le script de la caisse.</p></div></li>
+          <li><div><p>Vérifie le câble RJ12 : prises tenues côte à côte, languettes du même côté, les couleurs doivent être dans le même ordre. Un câble croisé déplace la masse.</p></div></li>
+        </ol></article>
+
+      <article class="phase"><header><span class="lettre">K</span><h3>Tester avec la balance</h3></header>
+        <ol class="etapes">
+          <li><div><p>Relie la balance au pavé par le câble RJ12, le pavé à la tablette, puis allume la balance.</p><p class="verif">La LED s'allume fixe dès que les pesées arrivent. Éteinte : le pavé ne reçoit rien (voir <a href="#depannage">Dépannage</a>).</p></div></li>
+          <li><div><p>Dans l'application de notes, pose un objet, attends la stabilisation, appuie sur <b>Peser</b>.</p><p class="verif">Le poids affiché par la balance s'écrit, par exemple <code>1,245</code>.</p></div></li>
+        </ol></article>
+
+      <article class="phase"><header><span class="lettre">L</span><h3>Fermer le boîtier</h3></header>
+        <ol class="etapes">
+          <li><div><p>Pose le circuit dans la base : prise RJ12 dans l'encoche avant, prise USB-C face à l'ouverture gauche. Il repose sur les 4 plots.</p></div></li>
+          <li><div><p>Visse les 4 vis M2,5 sans forcer (plastique imprimé). Pose les capuchons, puis emboîte le couvercle.</p><p class="verif">Chaque touche doit s'enfoncer et remonter sans frotter. Si une touche frotte, ponce légèrement son trou.</p></div></li>
+        </ol></article>
+
+      <article class="phase"><header><span class="lettre">M</span><h3>Essayer sur la caisse Ouvretaferme</h3></header>
+        <ol class="etapes">
+          <li><div><p>Sur la tablette, ouvre la caisse OTF d'une <b>ferme de démonstration</b>. Choisis un produit au poids.</p></div></li>
+          <li><div><p>Touche l'icône clavier du champ de quantité pour passer en saisie clavier, puis touche le champ.</p></div></li>
+          <li><div><p>Tape une quantité au pavé, ou appuie sur <b>Peser</b> pour l'essai. Vérifie le montant calculé par la caisse avant de valider.</p></div></li>
+          <li><div><p>Pour vendre au marché : tape le poids lu sur la balance, sans Peser ni Auto.</p></div></li>
+        </ol></article>
+
+      <article class="phase"><header><span class="lettre">Z</span><h3>Mettre à jour</h3></header>
+        <ol class="etapes">
+          <li><div><p>Nouvelle disposition des touches ou autre réglage : génère un nouveau programme et recharge-le comme à l'étape H, avec le bouton <kbd>B</kbd>.</p></div></li>
+          <li><div><p>Garde le ZIP de chaque version qui marche : en cas de souci, il suffit de recharger l'ancien.</p></div></li>
+        </ol></article>
+    </div>
+  </section>
+
+  <section id="depannage">
+    <span class="eyebrow">Dépannage</span>
+    <h2>Ce que dit la LED, et quoi faire</h2>
+    <div class="tableau"><table>
+      <thead><tr><th>Signe</th><th>Cause probable</th><th>Que faire</th></tr></thead>
+      <tbody>
+        <tr><td><span class="led"><i></i><i></i><i></i></span>3 éclairs au branchement</td><td>Démarrage normal.</td><td>Rien.</td></tr>
+        <tr><td>LED allumée fixe</td><td>Les pesées arrivent.</td><td>Rien.</td></tr>
+        <tr><td>LED éteinte, balance allumée</td><td>Aucune pesée reçue.</td><td>Vérifier les réglages de la balance (étape J), le câble droit, la soudure de la prise RJ12, le MAX3232 bien enfoncé dans le bon sens.</td></tr>
+        <tr><td><span class="led"><i></i><i></i></span>2 éclairs après Peser</td><td>Balance muette.</td><td>Comme ci-dessus.</td></tr>
+        <tr><td><span class="led"><i></i><i></i><i></i></span>3 éclairs après Peser</td><td>Pesée instable pendant 3 secondes, ou poids nul ou négatif.</td><td>Attendre la stabilisation, refaire la tare.</td></tr>
+        <tr><td><span class="led"><i></i><i></i><i></i><i></i></span>4 éclairs après Peser</td><td>Surcharge.</td><td>Alléger le plateau.</td></tr>
+        <tr><td><span class="led"><i></i></span>1 éclair sur Auto</td><td>Mode Auto non autorisé dans le programme.</td><td>Normal. Pour un essai, cocher « Autoriser la touche Auto » et recharger.</td></tr>
+        <tr><td>LED qui clignote lentement</td><td>Mode Auto actif.</td><td>Appuyer sur Auto pour l'arrêter.</td></tr>
+        <tr><td>Les chiffres sortent en &amp; é " '</td><td>Langue du clavier différente.</td><td>Changer « Clavier de la tablette » et recharger (étape I).</td></tr>
+        <tr><td>Rien ne s'écrit</td><td>Champ non sélectionné, ou programme chargé sans « USB-OTG (TinyUSB) ».</td><td>Toucher le champ. Vérifier le réglage USB Mode (étape G) et recharger.</td></tr>
+        <tr><td>Arduino ne trouve pas le XIAO</td><td>Le programme occupe la prise USB.</td><td>Méthode du bouton <kbd>B</kbd> (étape H).</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="fichiers">
+    <span class="eyebrow">Fichiers</span>
+    <h2>Tout ce qu'il faut pour fabriquer</h2>
+    <div class="fichiers">
+      <div class="fichier"><h3>Circuit imprimé</h3><p>Fichiers de fabrication Gerber et perçage, à déposer tels quels chez le fabricant.</p><div class="boutons"><button type="button" class="principal" id="gerbers">Télécharger les Gerber (.zip)</button></div></div>
+      <div class="fichier"><h3>Boîtier</h3><p>Fichiers STL prêts à imprimer, projet KiCad complet et documentation sur le dépôt GitHub.</p><div class="boutons"><a class="second" style="display:inline-block;text-decoration:none;padding:10px 16px;border:1px solid var(--vernis);border-radius:8px;font-weight:600" href="https://github.com/nicolasmieral-wq/balance-connectee-otf/tree/main/boitier" target="_blank" rel="noopener">Ouvrir sur GitHub</a></div></div>
+      <div class="fichier"><h3>Projet complet</h3><p>Schéma, circuit KiCad, programmes de génération et de contrôle, licence MIT.</p><div class="boutons"><a class="second" style="display:inline-block;text-decoration:none;padding:10px 16px;border:1px solid var(--vernis);border-radius:8px;font-weight:600" href="https://github.com/nicolasmieral-wq/balance-connectee-otf" target="_blank" rel="noopener">Dépôt balance-connectee-otf</a></div></div>
+    </div>
+    <div class="etat" id="etat-fichiers" aria-live="polite"></div>
+  </section>
+</div>
+
+<script src="firmware.js"></script>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var F=window.Firmware;
+  var touches=F.DEFAUT.touches.map(function(r){return r.slice()});
+  var ordre=['0','1','2','3','4','5','6','7','8','9','00','sep','eff','ent','tab','peser','auto','rien'];
+
+  function construirePave(){
+    var p=$('pave');p.innerHTML='';
+    touches.forEach(function(rang,r){rang.forEach(function(t,c){
+      var s=document.createElement('select');s.id='touche-'+r+'-'+c;s.setAttribute('aria-label','Touche rangée '+(r+1)+', colonne '+(c+1));
+      ordre.forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=F.ACTIONS[k].replace('Chiffre ','').replace('Virgule (séparateur)','Virgule').replace('Double zéro','00').replace('Auto (essai)','Auto');if(k===t)o.selected=true;s.appendChild(o)});
+      s.onchange=function(){touches[r][c]=s.value;maj()};p.appendChild(s)})})}
+
+  function options(){return{touches:touches,disposition:$('disposition').value,separateur:$('separateur').value,unite:$('unite').value,apres:$('apres').value,vitesse:parseInt($('vitesse').value,10),auto:$('auto').checked,nom:$('nom').value}}
+  var code='';
+  function maj(){
+    code=F.generer(options());$('code').textContent=code;
+    var peser=touches.some(function(r){return r.indexOf('peser')>=0});
+    $('etat').textContent=peser?'Programme prêt : '+code.split('\n').length+' lignes.':'Attention : aucune touche Peser dans la disposition.';
+  }
+  ['disposition','separateur','unite','apres','vitesse','auto','nom'].forEach(function(id){$(id).addEventListener(id==='nom'?'input':'change',maj)});
+  $('formulaire').addEventListener('submit',function(e){e.preventDefault()});
+  $('defaut').onclick=function(){touches=F.DEFAUT.touches.map(function(r){return r.slice()});construirePave();maj()};
+
+  $('copier').onclick=function(){
+    try{navigator.clipboard.writeText(code).then(function(){$('etat').textContent='Code copié.'},selection)}catch(e){selection()}
+    function selection(){var r=document.createRange();r.selectNodeContents($('code'));var s=getSelection();s.removeAllRanges();s.addRange(r);$('etat').textContent='Code sélectionné : copie-le avec Ctrl+C.'}
+  };
+
+  var CRC=(function(){var t=new Uint32Array(256);for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+  function crc32(d){var c=0xFFFFFFFF;for(var i=0;i<d.length;i++)c=CRC[(c^d[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
+  function zip(fichiers){var parts=[],central=[],off=0,enc=new TextEncoder();
+    fichiers.forEach(function(f){var nom=enc.encode(f.nom),crc=crc32(f.data),h=new DataView(new ArrayBuffer(30));
+      h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint32(14,crc,true);h.setUint32(18,f.data.length,true);h.setUint32(22,f.data.length,true);h.setUint16(26,nom.length,true);
+      parts.push(new Uint8Array(h.buffer),nom,f.data);
+      var c=new DataView(new ArrayBuffer(46));c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint16(8,0x0800,true);c.setUint32(16,crc,true);c.setUint32(20,f.data.length,true);c.setUint32(24,f.data.length,true);c.setUint16(28,nom.length,true);c.setUint32(42,off,true);
+      central.push(new Uint8Array(c.buffer),nom);off+=30+nom.length+f.data.length});
+    var taille=central.reduce(function(s,a){return s+a.length},0),fin=new DataView(new ArrayBuffer(22));
+    fin.setUint32(0,0x06054b50,true);fin.setUint16(8,fichiers.length,true);fin.setUint16(10,fichiers.length,true);fin.setUint32(12,taille,true);fin.setUint32(16,off,true);
+    return new Blob(parts.concat(central,[new Uint8Array(fin.buffer)]),{type:'application/zip'})}
+
+  var GERBERS=["pave-balance-B_Cu.gbr", "pave-balance-B_Mask.gbr", "pave-balance-B_Paste.gbr", "pave-balance-B_Silkscreen.gbr", "pave-balance-Edge_Cuts.gbr", "pave-balance-F_Cu.gbr", "pave-balance-F_Mask.gbr", "pave-balance-F_Paste.gbr", "pave-balance-F_Silkscreen.gbr", "pave-balance-NPTH.drl", "pave-balance-PTH.drl", "pave-balance-job.gbrjob"];
+  var outil=null;
+  async function enregistrer(nom,blob,sortie){
+    try{if(!outil)outil=await claude.use('downloads');
+      if(!outil){sortie.textContent='Le téléchargement n’est pas disponible dans cette vue.';return}
+      await outil.save({filename:nom,data:blob});sortie.textContent='Fichier enregistré.'}
+    catch(e){var c=e&&e.code;sortie.textContent=c==='declined'?'Téléchargement annulé.':c==='rate_limited'?'Une demande est déjà ouverte : réessaie dans un instant.':'Téléchargement impossible ici ('+(c||'erreur')+').'}}
+
+  $('telecharger').onclick=function(){
+    var enc=new TextEncoder(),o=options();
+    var lisez='Pavé balance OTF : programme du XIAO ESP32-S3\r\n\r\n1. Ouvrir pave_balance/pave_balance.ino dans Arduino IDE.\r\n2. Carte : XIAO_ESP32S3. Outils > USB Mode : USB-OTG (TinyUSB).\r\n3. Téléverser. En cas d\'échec : maintenir B, brancher, relâcher, téléverser, appuyer sur R.\r\n\r\nPrototype non testé : essais uniquement, jamais pour vendre au poids.\r\n';
+    enregistrer('pave-balance-programme-'+o.disposition+'.zip',zip([{nom:'pave_balance/pave_balance.ino',data:enc.encode(code)},{nom:'pave_balance/LISEZMOI.txt',data:enc.encode(lisez)}]),$('etat'))};
+
+  $('gerbers').onclick=async function(){
+    var s=$('etat-fichiers');s.textContent='Préparation…';
+    try{var fs=[];for(var i=0;i<GERBERS.length;i++){var r=await fetch('fichiers/'+GERBERS[i]);if(!r.ok)throw new Error();fs.push({nom:GERBERS[i],data:new Uint8Array(await r.arrayBuffer())})}
+      enregistrer('pave-balance-gerbers.zip',zip(fs),s)}
+    catch(e){s.textContent='Fichier introuvable : prends-le sur le dépôt GitHub, dossier circuit.'}};
+
+  construirePave();maj();
+})();
+</script>
