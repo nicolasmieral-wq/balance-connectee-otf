@@ -44,4 +44,4 @@ Circuit 62,6 × 84,6 mm, 2 couches, pistes 0,3 mm, isolement 0,2 mm (0,25 mm mes
 
 ## Fabrication
 
-Dans KiCad : *Fichiers → Fabrication → Gerbers*, puis *Générer fichiers de perçage*. Compresser le dossier obtenu en ZIP et l'envoyer au fabricant. Réglages courants : 2 couches, 1,6 mm, finition HASL.
+Fichier prêt : `pave-balance-gerbers.zip` (Gerber + perçage, généré par KiCad 10). Pour le refaire dans KiCad : *Fichiers → Fabrication → Gerbers*, puis *Générer fichiers de perçage*. Compresser le dossier obtenu en ZIP et l'envoyer au fabricant. Réglages courants : 2 couches, 1,6 mm, finition HASL.
