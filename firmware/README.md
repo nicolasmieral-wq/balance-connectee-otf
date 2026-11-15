@@ -3,7 +3,7 @@
 > **Prototype non testé sur le matériel.** Essais uniquement, jamais pour vendre au poids.
 
 - `pave_balance/pave_balance.ino` : programme avec les réglages d'origine (clavier AZERTY, virgule, kg à 3 décimales, Auto désactivé).
-- `generer-firmware.js` : générateur utilisé par la page du kit (`kit.html`) pour produire un programme selon la tablette.
+- `generer-firmware.js` : générateur utilisé par la page du kit ([`docs/kit/`](../docs/kit/index.html), en ligne sur https://nicolasmieral-wq.github.io/balance-connectee-otf/) pour produire un programme selon la tablette.
 
 Le pavé se présente comme un clavier USB : il marche sur Android et iPad sans application.
 

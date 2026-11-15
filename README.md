@@ -1,5 +1,7 @@
 # Balance connectée pour la caisse Ouvretaferme
 
+**Pavé balance (kit à monter) : [page explicative, générateur de programme et pas à pas](https://nicolasmieral-wq.github.io/balance-connectee-otf/)**
+
 Ce petit script relie une balance de marché à la **caisse enregistreuse d'[Ouvretaferme](https://www.ouvretaferme.org)**. On pose le produit, on touche l'article dans la caisse, et le poids s'inscrit et s'enregistre tout seul.
 
 Il ne modifie pas le site Ouvretaferme, n'utilise pas son API et ne demande aucune clé. Il s'ajoute simplement à la page de la caisse, ouverte dans le navigateur, à l'aide d'un favori.

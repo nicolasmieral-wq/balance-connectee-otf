@@ -391,6 +391,9 @@ html{scroll-behavior:smooth}
   var GERBERS=["pave-balance-B_Cu.gbr", "pave-balance-B_Mask.gbr", "pave-balance-B_Paste.gbr", "pave-balance-B_Silkscreen.gbr", "pave-balance-Edge_Cuts.gbr", "pave-balance-F_Cu.gbr", "pave-balance-F_Mask.gbr", "pave-balance-F_Paste.gbr", "pave-balance-F_Silkscreen.gbr", "pave-balance-NPTH.drl", "pave-balance-PTH.drl", "pave-balance-job.gbrjob"];
   var outil=null;
   async function enregistrer(nom,blob,sortie){
+    if(typeof window.claude==='undefined'||!window.claude.use){            // page ouverte hors de Claude (GitHub Pages)
+      var u=URL.createObjectURL(blob),l=document.createElement('a');l.href=u;l.download=nom;document.body.appendChild(l);l.click();l.remove();
+      setTimeout(function(){URL.revokeObjectURL(u)},4000);sortie.textContent='Fichier téléchargé.';return}
     try{if(!outil)outil=await claude.use('downloads');
       if(!outil){sortie.textContent='Le téléchargement n’est pas disponible dans cette vue.';return}
       await outil.save({filename:nom,data:blob});sortie.textContent='Fichier enregistré.'}
