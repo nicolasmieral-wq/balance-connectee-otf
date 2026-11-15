@@ -52,6 +52,8 @@ figcaption{font-size:14px;color:var(--doux)}
 .fait span{font-size:14.5px;color:var(--doux)}
 .tableau{overflow-x:auto;border:1px solid var(--trait);border-radius:10px;background:var(--surface)}
 table{border-collapse:collapse;width:100%;min-width:620px;font-size:15px}
+table.reglages{min-width:0;font-size:14.5px}
+table.reglages td:first-child{font-family:var(--f-mono);font-size:13.5px;white-space:nowrap}
 th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--trait);vertical-align:top}
 th{font:600 12px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--doux);background:var(--vernis-clair)}
 tr:last-child td{border-bottom:0}
@@ -232,7 +234,34 @@ html{scroll-behavior:smooth}
         <ol class="etapes">
           <li><div><p>Télécharge <code>pave-balance-gerbers.zip</code> (rubrique <a href="#fichiers">Fichiers</a>). Ne le décompresse pas.</p></div></li>
           <li><div><p>Chez le fabricant (JLCPCB, PCBWay, Aisler…), choisis « devis de circuit » et dépose le ZIP. Le site affiche le circuit : vérifie qu'il mesure 62,6 × 84,6 mm.</p></div></li>
-          <li><div><p>Réglages : 2 couches, épaisseur 1,6 mm, finition HASL, quantité 5, couleur au choix, sans assemblage. Laisse le reste par défaut.</p></div></li>
+          <li><div><p>Remplis le formulaire avec ces valeurs (intitulés de JLCPCB, presque les mêmes ailleurs). Laisse par défaut tout ce qui n'est pas dans le tableau.</p>
+            <div class="tableau"><table class="reglages">
+              <thead><tr><th>Champ</th><th>Valeur</th></tr></thead>
+              <tbody>
+                <tr><td>Base Material</td><td>FR-4</td></tr>
+                <tr><td>Layers</td><td><b>2</b></td></tr>
+                <tr><td>Dimensions</td><td>62,6 × 84,6 mm (rempli automatiquement, à vérifier)</td></tr>
+                <tr><td>PCB Qty</td><td>5 (le minimum)</td></tr>
+                <tr><td>Different Design</td><td>1</td></tr>
+                <tr><td>Delivery Format</td><td>Single PCB</td></tr>
+                <tr><td>PCB Thickness</td><td><b>1,6 mm</b></td></tr>
+                <tr><td>PCB Color</td><td>au choix (vert : le moins cher et le plus rapide)</td></tr>
+                <tr><td>Silkscreen</td><td>blanc</td></tr>
+                <tr><td>Material Type</td><td>FR4 standard (TG 135-140)</td></tr>
+                <tr><td>Surface Finish</td><td><b>HASL</b> (« lead free » pour sans plomb)</td></tr>
+                <tr><td>Outer Copper Weight</td><td>1 oz</td></tr>
+                <tr><td>Via Covering</td><td>Tented</td></tr>
+                <tr><td>Min via hole size / diameter</td><td>0,3 / 0,6 mm (par défaut)</td></tr>
+                <tr><td>Board Outline Tolerance</td><td>±0,2 mm (par défaut)</td></tr>
+                <tr><td>Confirm Production File</td><td>No</td></tr>
+                <tr><td>Electrical Test</td><td>flying probe (gratuit)</td></tr>
+                <tr><td>Gold Fingers, Castellated Holes, Edge Plating</td><td><b>No</b></td></tr>
+                <tr><td>Remove Order Number / Mark on PCB</td><td>par défaut</td></tr>
+                <tr><td>PCB Assembly / SMT</td><td><b>non</b> : on soude soi-même</td></tr>
+              </tbody>
+            </table></div>
+            <p class="verif">Si le site demande les caractéristiques : pistes de 0,3 mm, écart minimum 0,2 mm, plus petit perçage 0,3 mm (vias), trous non métallisés de 2,7 mm (fixations) et 3,25 mm (tétons du RJ12). Aucune option payante n'est nécessaire.</p></div></li>
+          <li><div><p>Avant de payer, regarde l'aperçu du site : les 16 emplacements de boutons, le MAX3232 à l'arrière, les 4 trous dans les coins et le texte « Pavé balance OTF v0.1 ».</p><p class="verif">Aperçu vide ou à une autre taille : ne commande pas, signale-le.</p></div></li>
         </ol></article>
 
       <article class="phase"><header><span class="lettre">E</span><h3>Imprimer le boîtier</h3></header>
