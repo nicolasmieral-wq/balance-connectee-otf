@@ -16,7 +16,7 @@ Un pavé numérique 16 touches qui se branche en USB-C sur un iPad ou un télép
 | `boitier-dessus.stl` | Couvercle : 16 trous de 12,4 mm (pas de 15 mm), trou de LED, lèvre emboîtée (jeu 0,2 mm) |
 | `generateur-boitier.html` | Générateur en ligne : place la fiche USB-C sur le côté, à la hauteur de la tablette, et télécharge les STL |
 | `touche-test.stl` | 3 capuchons d'essai, logements de 3,9 / 4,1 / 4,3 mm (marqués 1, 2, 3) pour choisir le serrage sur la tige ; réglage retenu : 4,0 mm, profondeur 2,8 mm |
-| `touches-chiffres.stl`, `touches-fonctions.stl` | Les 16 capuchons ronds Ø 12 mm, inscriptions en relief : 1-9, 0, 00, virgule ; Effacer, Peser, Entrée, Auto. Pause changement de filament à 6,7 mm |
+| `touches-chiffres.stl`, `touches-fonctions.stl` | Les 16 capuchons ronds Ø 12 mm, dessus creusé, inscriptions gravées : 1-9, 0, 00, virgule ; Effacer (flèche), P (peser), Entrée (flèche retour), A (auto). Logement 4,0 × 2,8 mm. Changement de filament juste au-dessus de 5,8 mm pour des inscriptions de la première couleur sur fond de la seconde |
 | `generer_touches.py` | Génère les capuchons ; `python3 generer_touches.py . 4,1` pour un autre logement |
 | `generer_boitier.py` | Génère les deux STL. Toutes les cotes sont en tête du fichier |
 | `rendu_iso.py` | Dessine les vues 3D |
