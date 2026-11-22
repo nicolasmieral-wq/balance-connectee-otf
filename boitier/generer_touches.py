@@ -1,7 +1,7 @@
 """Capuchons de touches imprimés en 3D : dessus creusé, inscriptions gravées (prototype).
 
 Pour boutons 12 x 12 x 7,3 mm à tige carrée de 3,9 mm dépassant de 3,1 mm
-(logement 4,05 mm sur 2,8 mm, entrée chanfreinée ; plaque d'essai 4,0 à 4,15 mm).
+(logement 4,15 mm sur 2,8 mm, entrée chanfreinée : validé à l'essai).
 
 Impression debout, dessus vers le haut, SANS support.
 Deux couleurs : changement de filament juste au-dessus de FOND (5,8 mm).
@@ -31,7 +31,7 @@ CREUX = 0.5              # profondeur de la cuvette au centre
 GRAVURE = 0.7            # profondeur des gravures sous le point le plus bas de la cuvette
 FOND = BORD - CREUX - GRAVURE      # 5,8 mm : fond plat des gravures (multiple de 0,2)
 SOCLE = FOND - 0.2       # dessus du corps, sous la partie gravée
-LOGEMENT = 4.05          # 4,1 : un poil lâche ; 4,0 : ne rentre pas
+LOGEMENT = 4.15          # validé à l'essai (plaque 4,0 à 4,15 : la 4,15 tient le mieux)
 PROFONDEUR = 2.8
 ENTREE = 0.4             # chanfrein d'entrée du logement (compense l'écrasement de la 1re couche)
 PAS_GRILLE = 0.1         # résolution du dessus gravé (mm)
