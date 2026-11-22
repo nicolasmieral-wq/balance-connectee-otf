@@ -1,7 +1,7 @@
 """Capuchons de touches imprimés en 3D : dessus creusé, inscriptions gravées (prototype).
 
 Pour boutons 12 x 12 x 7,3 mm à tige carrée de 3,9 mm dépassant de 3,1 mm
-(logement 4,0 mm sur 2,8 mm : réglage validé à l'essai).
+(logement 4,05 mm sur 2,8 mm, entrée chanfreinée ; plaque d'essai 4,0 à 4,15 mm).
 
 Impression debout, dessus vers le haut, SANS support.
 Deux couleurs : changement de filament juste au-dessus de FOND (5,8 mm).
@@ -31,8 +31,9 @@ CREUX = 0.5              # profondeur de la cuvette au centre
 GRAVURE = 0.7            # profondeur des gravures sous le point le plus bas de la cuvette
 FOND = BORD - CREUX - GRAVURE      # 5,8 mm : fond plat des gravures (multiple de 0,2)
 SOCLE = FOND - 0.2       # dessus du corps, sous la partie gravée
-LOGEMENT = 4.0
+LOGEMENT = 4.05          # 4,1 : un poil lâche ; 4,0 : ne rentre pas
 PROFONDEUR = 2.8
+ENTREE = 0.4             # chanfrein d'entrée du logement (compense l'écrasement de la 1re couche)
 PAS_GRILLE = 0.1         # résolution du dessus gravé (mm)
 POLICE = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 
@@ -101,22 +102,26 @@ def corps(cx, cy, logement, n=96):
         t.append(orienter(((*a, SOCLE), (*b, SOCLE), (*b, h)), inv))
         t.append(orienter(((*a, SOCLE), (*b, h), (*a, h)), inv))
         t.append(orienter(((cx, cy, SOCLE), (*a, SOCLE), (*b, SOCLE)), (0, 0, 1)))
-    carre = [(cx - s, cy - s), (cx + s, cy - s), (cx + s, cy + s), (cx - s, cy + s)]
-    pts = [pt(r, k) for k in range(n)] + carre
+    e = ENTREE / 2
+    sq = lambda h: [(cx - h, cy - h), (cx + h, cy - h), (cx + h, cy + h), (cx - h, cy + h)]
+    large, carre = sq(s + e), sq(s)
+    pts = [pt(r, k) for k in range(n)] + large
     for k in range(1, 4):
         for j in range(24):
             rr = s * 1.5 + (r - s * 1.5) * k / 4
             pts.append((cx + rr * math.cos(2 * math.pi * j / 24), cy + rr * math.sin(2 * math.pi * j / 24)))
     for a, b, c in Delaunay(np.array(pts)).simplices:
         g = [(pts[a][i] + pts[b][i] + pts[c][i]) / 3 for i in (0, 1)]
-        if abs(g[0] - cx) < s and abs(g[1] - cy) < s:
+        if abs(g[0] - cx) < s + e and abs(g[1] - cy) < s + e:
             continue
         t.append(orienter(((*pts[a], 0), (*pts[b], 0), (*pts[c], 0)), (0, 0, -1)))
     for k in range(4):
-        p, q = carre[k], carre[(k + 1) % 4]
-        nrm = (cx - (p[0] + q[0]) / 2, cy - (p[1] + q[1]) / 2, 0)
-        t.append(orienter(((*p, 0), (*q, 0), (*q, PROFONDEUR)), nrm))
-        t.append(orienter(((*p, 0), (*q, PROFONDEUR), (*p, PROFONDEUR)), nrm))
+        nrm = (cx - (carre[k][0] + carre[(k + 1) % 4][0]) / 2, cy - (carre[k][1] + carre[(k + 1) % 4][1]) / 2, 0)
+        p0, q0, p, q = large[k], large[(k + 1) % 4], carre[k], carre[(k + 1) % 4]
+        t.append(orienter(((*p0, 0), (*q0, 0), (*q, ENTREE)), (nrm[0], nrm[1], -1)))
+        t.append(orienter(((*p0, 0), (*q, ENTREE), (*p, ENTREE)), (nrm[0], nrm[1], -1)))
+        t.append(orienter(((*p, ENTREE), (*q, ENTREE), (*q, PROFONDEUR)), nrm))
+        t.append(orienter(((*p, ENTREE), (*q, PROFONDEUR), (*p, PROFONDEUR)), nrm))
     t.append(orienter(((*carre[0], PROFONDEUR), (*carre[1], PROFONDEUR), (*carre[2], PROFONDEUR)), (0, 0, -1)))
     t.append(orienter(((*carre[0], PROFONDEUR), (*carre[2], PROFONDEUR), (*carre[3], PROFONDEUR)), (0, 0, -1)))
     return t
@@ -191,4 +196,6 @@ if __name__ == '__main__':
     print('corps fermé :', verifier(corps(0, 0, LOGEMENT)), '| dessus fermé :', verifier(dessus('8', 0, 0)))
     ecrire_stl(sortie / 'touches-chiffres.stl', plateau(CHIFFRES), 'touches-chiffres')
     ecrire_stl(sortie / 'touches-fonctions.stl', plateau(FONCTIONS), 'touches-fonctions')
+    essai = {0: 4.0, 1: 4.05, 2: 4.1, 3: 4.15}          # touche 1 = 4,0 ... touche 4 = 4,15 mm
+    ecrire_stl(sortie / 'touches-essai-serrage.stl', plateau(['1', '2', '3', '4'], essai), 'touches-essai-serrage')
     print(f'logement {LOGEMENT} mm ; fond des gravures à {FOND:.1f} mm : changer de filament juste au-dessus')
