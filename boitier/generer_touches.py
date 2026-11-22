@@ -24,8 +24,8 @@ from generer_boitier import ecrire_stl, croix, produit  # noqa: E402
 DIAMETRE = 12.0          # passe dans les trous de 12,6 mm du couvercle
 DESSUS = 6.7             # hauteur du corps ; dépasse d'environ 2 mm du couvercle
 CHANFREIN = 0.6
-LOGEMENT = 4.1           # côté du logement carré (tige mesurée 3,9 mm)
-PROFONDEUR = 2.6         # la tige dépasse de 3,1 mm : 0,5 mm de jeu sous le capuchon
+LOGEMENT = 4.0           # côté du logement carré (tige mesurée 3,9 mm ; 4,1 essayé : un peu lâche)
+PROFONDEUR = 2.8         # la tige dépasse de 3,1 mm : 0,3 mm de jeu sous le capuchon (course du bouton 0,25 mm)
 RELIEF = 0.6
 POLICE = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 
