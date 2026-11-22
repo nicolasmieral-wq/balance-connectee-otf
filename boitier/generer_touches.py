@@ -196,6 +196,7 @@ if __name__ == '__main__':
     print('corps fermé :', verifier(corps(0, 0, LOGEMENT)), '| dessus fermé :', verifier(dessus('8', 0, 0)))
     ecrire_stl(sortie / 'touches-chiffres.stl', plateau(CHIFFRES), 'touches-chiffres')
     ecrire_stl(sortie / 'touches-fonctions.stl', plateau(FONCTIONS), 'touches-fonctions')
+    ecrire_stl(sortie / 'touches-toutes.stl', plateau(CHIFFRES + FONCTIONS), 'touches-toutes')
     essai = {0: 4.0, 1: 4.05, 2: 4.1, 3: 4.15}          # touche 1 = 4,0 ... touche 4 = 4,15 mm
     ecrire_stl(sortie / 'touches-essai-serrage.stl', plateau(['1', '2', '3', '4'], essai), 'touches-essai-serrage')
     print(f'logement {LOGEMENT} mm ; fond des gravures à {FOND:.1f} mm : changer de filament juste au-dessus')
