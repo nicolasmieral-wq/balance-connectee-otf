@@ -12,6 +12,7 @@ Un pavé numérique 16 touches qui se branche en USB-C sur un iPad ou un télép
 | Fichier | Contenu |
 |---|---|
 | `boitier-base.stl` | Base : parois et fond de 2 mm, ouverture USB-C sur le côté gauche, encoche RJ12 au milieu du bord avant, 4 plots qui portent le circuit |
+| `boitier-dessus-rond.stl` | Couvercle pour capuchons **ronds** : trous ronds de 12,6 mm (réglable : `DIAM_ROND` dans `generer_boitier.py`, diamètre du capuchon + 0,5 mm). Le fichier contient deux volumes qui se chevauchent (parois et plaque), que le trancheur fusionne. |
 | `boitier-dessus.stl` | Couvercle : 16 trous de 12,4 mm (pas de 15 mm), trou de LED, lèvre emboîtée (jeu 0,2 mm) |
 | `generateur-boitier.html` | Générateur en ligne : place la fiche USB-C sur le côté, à la hauteur de la tablette, et télécharge les STL |
 | `generer_boitier.py` | Génère les deux STL. Toutes les cotes sont en tête du fichier |

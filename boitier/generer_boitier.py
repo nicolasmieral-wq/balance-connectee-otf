@@ -10,6 +10,7 @@ le maillage obtenu est fermé, sans bibliothèque externe.
 
 Usage : python3 generer_boitier.py [dossier_de_sortie]
 """
+import math
 import struct
 import sys
 from pathlib import Path
@@ -208,6 +209,125 @@ def dessus():
     return mailler(plein_dessus, xs, ys, zs, plans_chanfrein(bas=False, haut=True))
 
 
+# ---------- Couvercle à trous ronds (capuchons ronds) ----------
+def centres_trous():
+    """Centres des 16 touches, puis de la LED."""
+    x_depart = LARGEUR / 2 - (3 * PAS_TOUCHE + TROU_TOUCHE) / 2
+    for i in range(4):
+        for k in range(4):
+            yield x_depart + i * PAS_TOUCHE + TROU_TOUCHE / 2, GRILLE_Y0 + k * PAS_TOUCHE + TROU_TOUCHE / 2
+
+
+def plaque_ronde(diam, diam_led, segments=72):
+    """Dessus du couvercle (z de HAUTEUR - DESSUS à HAUTEUR), chanfreiné, percé de trous ronds.
+    Coque fermée indépendante ; elle chevauche les parois, ce que les trancheurs fusionnent."""
+    import numpy as np
+    from scipy.spatial import Delaunay
+    X, Y, c, H = LARGEUR, LONGUEUR, CHANFREIN, HAUTEUR
+    zb, zh = H - DESSUS, H
+    trous = [(cx, cy, diam / 2) for cx, cy in centres_trous()] + [(LED[0], LED[1], diam_led / 2)]
+
+    def anneau(cx, cy, r, n):
+        return [(cx + r * math.cos(2 * math.pi * (k + .5) / n), cy + r * math.sin(2 * math.pi * (k + .5) / n))
+                for k in range(n)]
+
+    polys = [anneau(cx, cy, r, segments if r > 3 else 24) for cx, cy, r in trous]
+    pas = 1.0
+    xs = list(np.arange(c, X - c + 1e-9, pas))
+    if xs[-1] < X - c - 1e-6:
+        xs.append(X - c)
+    ys = list(np.arange(c, Y - c + 1e-9, pas))
+    if ys[-1] < Y - c - 1e-6:
+        ys.append(Y - c)
+    # contour du dessus (rectangle rentré de c) et du dessous (octogone), mêmes abscisses
+    haut = [(x, c) for x in xs] + [(X - c, y) for y in ys[1:]] + [(x, Y - c) for x in xs[-2::-1]] + \
+           [(c, y) for y in ys[-2:0:-1]]
+    bas = [(x, 0.0) for x in xs] + [(X, y) for y in ys] + [(x, Y) for x in xs[::-1]] + [(0.0, y) for y in ys[::-1]]
+
+    def loin_des_trous(x, y, m):
+        return all(math.hypot(x - cx, y - cy) > r + m for cx, cy, r in trous)
+
+    def triangule(contour, interieur):
+        pts = list(contour) + [p for poly in polys for p in poly]
+        for x in np.arange(c + 1.5, X - c - 1.0, 1.6):
+            for y in np.arange(c + 1.5, Y - c - 1.0, 1.6):
+                if loin_des_trous(x, y, 1.0):
+                    pts.append((float(x), float(y)))
+        tri = Delaunay(np.array(pts))
+        res = []
+        for a, b, d in tri.simplices:
+            g = ((pts[a][0] + pts[b][0] + pts[d][0]) / 3, (pts[a][1] + pts[b][1] + pts[d][1]) / 3)
+            if interieur(*g) and loin_des_trous(g[0], g[1], -0.02) and \
+                    not any(math.hypot(g[0] - cx, g[1] - cy) < r * math.cos(math.pi / (segments if r > 3 else 24)) - 1e-6
+                            for cx, cy, r in trous):
+                res.append((pts[a], pts[b], pts[d]))
+        return res
+
+    triangles = []
+
+    def ajouter(tri3d, normale):
+        a, b, d = tri3d
+        n = croix([b[i] - a[i] for i in range(3)], [d[i] - a[i] for i in range(3)])
+        if produit(n, normale) < 0:
+            tri3d = (a, d, b)
+        triangles.append(tri3d)
+
+    dedans_haut = lambda x, y: c - 1e-9 <= x <= X - c + 1e-9 and c - 1e-9 <= y <= Y - c + 1e-9
+    dedans_bas = lambda x, y: 0 <= x <= X and 0 <= y <= Y and x + y >= c and (X - x) + y >= c and \
+        x + (Y - y) >= c and (X - x) + (Y - y) >= c
+    for a, b, d in triangule(haut, dedans_haut):
+        ajouter(((a[0], a[1], zh), (b[0], b[1], zh), (d[0], d[1], zh)), (0, 0, 1))
+    for a, b, d in triangule(bas, dedans_bas):
+        ajouter(((a[0], a[1], zb), (b[0], b[1], zb), (d[0], d[1], zb)), (0, 0, -1))
+    # parois des trous (normale vers le centre du trou)
+    for (cx, cy, r), poly in zip(trous, polys):
+        for k in range(len(poly)):
+            p, q = poly[k], poly[(k + 1) % len(poly)]
+            mx, my = (p[0] + q[0]) / 2, (p[1] + q[1]) / 2
+            nrm = (cx - mx, cy - my, 0)
+            ajouter(((p[0], p[1], zb), (q[0], q[1], zb), (q[0], q[1], zh)), nrm)
+            ajouter(((p[0], p[1], zb), (q[0], q[1], zh), (p[0], p[1], zh)), nrm)
+    # chanfreins des quatre bords
+    def bande(h_pts, b_pts, nrm):
+        for i in range(len(h_pts) - 1):
+            ajouter(((*b_pts[i], zb), (*b_pts[i + 1], zb), (*h_pts[i + 1], zh)), nrm)
+            ajouter(((*b_pts[i], zb), (*h_pts[i + 1], zh), (*h_pts[i], zh)), nrm)
+    bande([(x, c) for x in xs], [(x, 0.0) for x in xs], (0, -1, 1))
+    bande([(x, Y - c) for x in xs], [(x, Y) for x in xs], (0, 1, 1))
+    bande([(c, y) for y in ys], [(0.0, y) for y in ys], (-1, 0, 1))
+    bande([(X - c, y) for y in ys], [(X, y) for y in ys], (1, 0, 1))
+    # quatre coins
+    for (hx, hy), (b1, b2), nrm in (((c, c), ((c, 0.0), (0.0, c)), (-1, -1, 1)),
+                                     ((X - c, c), ((X - c, 0.0), (X, c)), (1, -1, 1)),
+                                     ((c, Y - c), ((c, Y), (0.0, Y - c)), (-1, 1, 1)),
+                                     ((X - c, Y - c), ((X - c, Y), (X, Y - c)), (1, 1, 1))):
+        ajouter(((hx, hy, zh), (*b1, zb), (*b2, zb)), nrm)
+    return triangles
+
+
+def murs_dessus():
+    """Couvercle sans sa plaque : parois et lèvre, montées 0,5 mm dans la plaque."""
+    z_haut = HAUTEUR - DESSUS + 0.5
+
+    def plein(x, y, z):
+        if z > z_haut:
+            return False
+        if z > HAUTEUR - DESSUS and dans(x, PAROI, LARGEUR - PAROI) and dans(y, PAROI, LONGUEUR - PAROI):
+            return False
+        return plein_dessus(x, y, z) if z < HAUTEUR - DESSUS else (0 < x < LARGEUR and 0 < y < LONGUEUR)
+
+    j = PAROI + LEVRE_JEU
+    e = j + LEVRE_EPAISSEUR
+    xs = [0, PAROI, LARGEUR - PAROI, LARGEUR, j, e, LARGEUR - j, LARGEUR - e, RJ12[0] - 1, RJ12[1] + 1,
+          CHANFREIN, LARGEUR - CHANFREIN]
+    ys = [0, PAROI, LONGUEUR - PAROI, LONGUEUR, j, e, LONGUEUR - j, LONGUEUR - e, CHANFREIN, LONGUEUR - CHANFREIN]
+    zs = [COUPE - LEVRE_HAUTEUR, COUPE, HAUTEUR - DESSUS, z_haut]
+    return mailler(plein, xs, ys, zs, plans_chanfrein(bas=False, haut=True))
+
+
+DIAM_ROND = 12.6       # diamètre des trous ronds : diamètre du capuchon + 0,5 mm
+
+
 def verifier(triangles):
     """Chaque arête doit être partagée par exactement deux triangles, en sens opposés."""
     aretes = {}
@@ -225,3 +345,8 @@ if __name__ == '__main__':
     for nom, tri in (('boitier-base', base()), ('boitier-dessus', dessus())):
         ecrire_stl(sortie / (nom + '.stl'), tri, nom)
         print(nom, len(tri), 'triangles', 'fermé' if verifier(tri) else 'NON FERMÉ')
+    # Variante pour capuchons ronds : deux coques fermées dans le même fichier
+    murs, plaque = murs_dessus(), plaque_ronde(DIAM_ROND, LED[2])
+    ecrire_stl(sortie / 'boitier-dessus-rond.stl', murs + plaque, 'boitier-dessus-rond')
+    print('boitier-dessus-rond', len(murs) + len(plaque), 'triangles,',
+          'parois', 'fermées' if verifier(murs) else 'NON FERMÉES', '/ plaque', 'fermée' if verifier(plaque) else 'NON FERMÉE')
